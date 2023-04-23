@@ -1,0 +1,16 @@
+{
+    "user": [
+        "username varchar(255)",
+        "email varchar(255)",
+        "password varchar(255)",
+        "last_login timestamp",
+        "date_joined date"
+    ],
+    "post": [
+        "title varchar(255)",
+        "content text",
+        "pub_date timestamp",
+        "votes int",
+        "publisher_id int FOREIGN KEY REFERENCES user(id)"
+    ]
+}
