@@ -1,16 +1,17 @@
 {
-    "user": [
-        "username varchar(255)",
-        "email varchar(255)",
-        "password varchar(255)",
-        "last_login timestamp",
-        "date_joined date"
-    ],
-    "post": [
-        "title varchar(255)",
-        "content text",
-        "pub_date timestamp",
-        "votes int",
-        "publisher_id int FOREIGN KEY REFERENCES user(id)"
-    ]
+    "user": {
+        "username": "%s varchar(255)",
+        "email": "%s varchar(255)",
+        "password": "%s varchar(255)",
+        "last_login": "%s timestamp",
+        "date_joined": "%s date"
+    },
+    "post": {
+        "title": "%s varchar(255)",
+        "content": "%s text",
+        "pub_date": "%s timestamp",
+        "votes": "%s int",
+        "publisher_id": " %s int",
+        "publisher_id user": "FOREIGN KEY (%s) REFERENCES %s(id)"
+    }
 }

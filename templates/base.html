@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/navbar.css">
+    <title>Snips</title>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-section">
+            <img id=nav-logo src="/static/images/ahsoka-rebel.svg" alt="">
+            <h1 id="nav-title">&lt/SNIPS&gt</h1>
+        </div>
+        <div id="nav-search-container" class="nav-section">
+            <div id="nav-search">
+                <img id="nav-search-icon" src="/static/images/search.svg" alt="">
+                <form action="" method="get" id="nav-search-form" class="occupy center">
+                    <input type="text" name="search-bar" id="nav-search-bar" placeholder="search...">
+                </form>
+            </div>
+        </div>
+        <div class="nav-section" id="unauthorized">
+            <button id="sign-in-button" class="button1">sign in</button>
+            <button id="sign-up-button" class="button2">register</button>
+            <img id="unauth-user-icon" src="/static/images/user.svg" alt="">
+        </div>
+        <div class="nav-section hide" id="authorized">
+            <img id="auth-user-icon" src="/static/images/user.svg" alt="">
+            <h2 id="auth-user-name">Goby</h2>
+        </div>
+        </div>
+    </nav>
+    {% block body %}{% endblock body %}
+</body>
+</html>

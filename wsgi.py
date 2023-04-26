@@ -7,7 +7,15 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template("home.html", posts=posts)
+    return render_template("home.html")
+
+# @app.route("/user/<username>")
+# def user_profile(username):
+#     return render_template("<p>You are on %s's profile</p>" % username)
+
+# @app.route("/post/<int:post_id>")
+# def post(post_id):
+#     return render_template("<p>This is post number %s</p>" % post_id)
 
 
 if __name__ == "__main__":
