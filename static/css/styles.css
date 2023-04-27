@@ -23,6 +23,11 @@ div {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 75px;
     background-color: var(--black2);
 }
 
@@ -65,3 +70,35 @@ body {
     background-color: var(--orange);
     border: 1px solid var(--white);
 }
+
+.snippet {
+    display: block;
+    width: 60em;
+    border: 10px solid var(--orange);
+    border-radius: 5px;
+}
+
+.snippet pre {
+    /* width: 100%;
+    float: left;
+    overflow: auto;
+    border: 10px solid var(--orange);
+    border-radius: 5px; */
+    counter-reset: line;
+
+    margin: 0;
+    white-space:break-spaces;
+}
+
+.snippet pre code {
+    font-size: 1.5rem;
+    display: block;
+    height: 20em;
+    padding: 1em;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* code {
+    height: 500px;
+} */

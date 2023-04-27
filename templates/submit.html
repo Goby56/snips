@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/submit.css">
+{% endblock css %}
+
+{% block body %}
+<div id="submit-container">
+    <div id="snippet-editor">
+        <textarea id="input-area" cols="80" rows="20"></textarea>
+    </div>
+    <div id="snippet-preview" class="hide">
+        <div class="snippet">
+            <pre><code class="language-python">
+class Database:
+    def __init__(self) -> None:
+        self.name = "snips"
+        with open("models.json") as f:
+            self.models = json.load(f)
+
+        self.db_connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password=""
+        )
+        self.cursor = self.db_connection.cursor()
+
+        self.validate()
+            </code></pre>
+        </div>
+    </div>
+    <div id="snippet-options">
+        <select id="language-dropdown">
+            <option value="auto">auto detect</option>
+        </select>
+        <button class="button1">Preview</button>
+        <button class="button2">Post</button>
+    </div>
+</div>
+
+
+
+{% endblock body %}

@@ -9,6 +9,10 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
+@app.route("/share/")
+def share_snippet():
+    return render_template("submit.html")
+
 # @app.route("/user/<username>")
 # def user_profile(username):
 #     return render_template("<p>You are on %s's profile</p>" % username)

@@ -1,0 +1,34 @@
+@import url("/static/css/styles.css");
+
+
+#submit-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15vh;
+}
+
+#snippet-editor {
+    width: fit-content;
+    height: auto;
+}
+
+#input-area {
+    font-size: 1.2rem;
+    resize: none;
+    color: var(--white3);
+    background-color: var(--black3);
+}
+
+#snippet-preview {
+    width: 50em;
+    height: 25em;
+}
+
+#snippet-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}

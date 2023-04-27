@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="/static/navbar.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    {% block css %}{% endblock css %}
+
+    {% block scripts %}{% endblock scripts %}
     <title>Snips</title>
 </head>
 <body>
@@ -34,5 +38,10 @@
         </div>
     </nav>
     {% block body %}{% endblock body %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <script>
+        hljs.highlightAll();
+    </script>   
 </body>
 </html>
