@@ -11,8 +11,8 @@
     justify-content: space-around;
     align-items: center;
     background: repeating-linear-gradient(45deg, var(--white) 0%, 
-                                        var(--white) 33%, var(--blue3) 33%, 
-                                        var(--blue3) 67%, var(--white) 67%);
+                                        var(--white) 33%, var(--blue) 33%, 
+                                        var(--blue) 67%, var(--white) 67%);
 }
 
 .nav-section {
@@ -27,6 +27,10 @@
 #nav-logo {
     height: 100%;
     width: auto;
+}
+
+#nav-title {
+    color: var(--black2);
 }
 
 #nav-search {
@@ -75,8 +79,8 @@
     #navbar {
         justify-content: space-between;
         background: repeating-linear-gradient(45deg, var(--white) 0%, 
-                                        var(--white) 25%, var(--blue3) 25%, 
-                                        var(--blue3) 75%, var(--white) 75%);
+                                        var(--white) 25%, var(--blue) 25%, 
+                                        var(--blue) 75%, var(--white) 75%);
     }
 
     .nav-section {

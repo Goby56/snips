@@ -1,6 +1,7 @@
 {
     "user": {
         "username": "%s varchar(255)",
+        "displayname": "%s varchar(255)",
         "email": "%s varchar(255)",
         "password": "%s varchar(255)",
         "last_login": "%s timestamp",

@@ -4,15 +4,11 @@
     --black: #080708;
     --black2: #262322;
     --black3: #343434;
+    --gray:#cecccc;
     --white: #f4f9f3;
-    --white2: #ffe3c8;
-    --white3: #dabba7;
     --orange: #fd6953;
-    --orange2: #ff7553;
-    --orange3: #ff8b52;
-    --blue: #222a5c;
-    --blue2: #33355b;
-    --blue3: #3341a0;
+    --blue: #3341a0;
+    color: var(--white);
     font-family: 'Pathway Extreme', sans-serif;
 }
 
@@ -28,13 +24,28 @@ body {
     justify-content: center;
     align-items: center;
     padding-top: 75px;
+    height: 100vh;
+    box-sizing: border-box;
+    margin: 0;
     background-color: var(--black2);
+}
+
+h2 {
+    margin: 0;
+}
+
+::placeholder {
+    color: inherit;
 }
 
 .center {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.vertical {
+    flex-direction: column;
 }
 
 .occupy {
@@ -71,34 +82,72 @@ body {
     border: 1px solid var(--white);
 }
 
+.post {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    width: fit-content;
+}
+
+.title {
+    font-size: 1.5rem;
+}
+
 .snippet {
     display: block;
-    width: 60em;
-    border: 10px solid var(--orange);
+    width: max(200px, min(100%, 700px));
+    height: fit-content;
+    border: 3px solid var(--gray);
     border-radius: 5px;
 }
 
-.snippet pre {
-    /* width: 100%;
-    float: left;
-    overflow: auto;
-    border: 10px solid var(--orange);
-    border-radius: 5px; */
-    counter-reset: line;
+.description {
+    position: absolute;
+}
 
+.snippet pre {
     margin: 0;
-    white-space:break-spaces;
+    width: inherit;
+    height: inherit;
+    white-space: break-spaces;
 }
 
 .snippet pre code {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     display: block;
-    height: 20em;
+    width: 100%;
+    box-sizing: border-box;
+    height: fit-content;
+    max-height: 15em;
     padding: 1em;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
-/* code {
-    height: 500px;
-} */
+.widget {
+    border: 3px solid var(--blue);
+    border-radius: 5px;
+    color: var(--white);
+    background-color: var(--black3);
+    outline: none;
+}
+
+::-webkit-scrollbar-track
+{
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar
+{
+  width: 7px;
+  height: 7px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb
+{
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.2);
+}

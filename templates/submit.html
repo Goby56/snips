@@ -6,38 +6,36 @@
 
 {% block body %}
 <div id="submit-container">
-    <div id="snippet-editor">
-        <textarea id="input-area" cols="80" rows="20"></textarea>
+    <div id="page-title" class="center">
+        <h1>Share snippets</h1>
     </div>
-    <div id="snippet-preview" class="hide">
-        <div class="snippet">
-            <pre><code class="language-python">
-class Database:
-    def __init__(self) -> None:
-        self.name = "snips"
-        with open("models.json") as f:
-            self.models = json.load(f)
-
-        self.db_connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=""
-        )
-        self.cursor = self.db_connection.cursor()
-
-        self.validate()
-            </code></pre>
-        </div>
+    <div id="snippet-editor">
+        <form id="editor-form" action="">
+            <input type="text" id="title-input" name="title" placeholder="Title" class="widget">
+            <textarea id="snippet-input" name="snippet" placeholder="Code goes here..." class="widget"></textarea>
+            <textarea id="description-input" name="description" placeholder="Description" class="widget"></textarea>
+        </form>
     </div>
     <div id="snippet-options">
-        <select id="language-dropdown">
-            <option value="auto">auto detect</option>
-        </select>
-        <button class="button1">Preview</button>
-        <button class="button2">Post</button>
+        <div id="option-section-left" class="center">
+            <select id="language-dropdown" class="widget">
+                <option value="auto">auto detect language</option>
+            </select>
+        </div>
+        <div id="option-section-middle" class="center">
+            <button id="preview-button" class="button1">Preview</button>
+
+        </div>
+        <div id="option-section-right" class="center">
+            <button id="post-button" class="button2">Post</button>
+        </div>
     </div>
 </div>
 
 
 
 {% endblock body %}
+
+{% block scripts %}
+<script src="/static/js/submit.js"></script>
+{% endblock scripts %}

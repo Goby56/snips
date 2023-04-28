@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
     {% block css %}{% endblock css %}
 
-    {% block scripts %}{% endblock scripts %}
     <title>Snips</title>
 </head>
 <body>
@@ -38,8 +37,10 @@
         </div>
     </nav>
     {% block body %}{% endblock body %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-
+    {% block scripts %}{% endblock scripts %}
     <script>
         hljs.highlightAll();
     </script>   
