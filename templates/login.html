@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Login to Snips</title>
+{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/login.css">
+{% endblock head %}
+
+{% block body %}
+    <div id="login-box">
+        <img src="/static/images/ahsoka-rebel.svg" alt="" id="logo">
+        <h3>Log in</h3>
+        <form action="/login/" method="post" id="login-form">
+            <input type="text" name="username" id="username-input" class="widget">
+            <input type="text" name="password" id="password-input" class="widget">
+
+            <input type="submit" value="Log in" class="widget">
+        </form>
+        <a href="/register/">Don't have an account? Register.</a>
+    </div>
+
+{% endblock body %}

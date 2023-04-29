@@ -1,4 +1,13 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
+
 {% block body %}
-<p>Penos</p>
+    {{ super() }}
+    <p>Penos</p>
 {% endblock body %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    hljs.highlightAll();
+</script>   
+{% endblock scripts %}

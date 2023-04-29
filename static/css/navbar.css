@@ -1,6 +1,10 @@
 @import url("/static/css/styles.css");
 
 
+body {
+    padding-top: 75px;
+}
+
 #navbar {
     position: fixed;
     top: 0;

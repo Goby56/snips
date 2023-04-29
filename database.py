@@ -1,4 +1,4 @@
-import mysql.connector
+import mysql.connector, bcrypt
 import json
 
 class TableMismatch(Exception):
@@ -10,8 +10,8 @@ class TableMismatch(Exception):
         super().__init__(f"The table '{table_name}' does not follow 'models.json' specifications")
 
 class Database:
-    def __init__(self) -> None:
-        self.name = "snips"
+    def __init__(self, name: str) -> None:
+        self.name = name
         with open("models.json") as f:
             self.models = json.load(f)
 
@@ -59,5 +59,17 @@ class Database:
             #     raise TableMismatch(name)
             # if self.models[name][col_name] != col_type:
             #     raise TableMismatch(name)
+
+    def insert_into(self, table: str, **kwargs):
+        columns = ", ".join(kwargs.keys())
+        values = ", ".join(kwargs.values())
+        self.execute(f"INSERT INTO {table} ({columns}) VALUES ({values})")
+
+    # def authenticate(self, username: str, password: str):
+    #     if 
+    #     self.execute(f"SELECT username, password FROM user WHERE username='{username}'")
+    #     print(self.cursor)
+        
+    # def register(self, username: str, password: str):
+    #     self.execute(f"INSERT INTO user ")
             
-db = Database()

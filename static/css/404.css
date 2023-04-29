@@ -1,0 +1,14 @@
+body {
+    padding: 4rem;
+    text-align: center;
+}
+
+img {
+    width: 80vh;
+}
+
+@media (orientation: portrait) {
+    img {
+        width: 80vw;
+    }
+}

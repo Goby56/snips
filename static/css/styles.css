@@ -8,6 +8,8 @@
     --white: #f4f9f3;
     --orange: #fd6953;
     --blue: #3341a0;
+    --light-transparent: rgba(255, 255, 255, 0.4);
+    --dark-transparent: rgba(0, 0, 0, 0.6);
     color: var(--white);
     font-family: 'Pathway Extreme', sans-serif;
 }
@@ -23,19 +25,37 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 75px;
     height: 100vh;
     box-sizing: border-box;
     margin: 0;
     background-color: var(--black2);
 }
 
+/* Nav title */
+h1 {
+    font-size: 2rem;
+    color: var(--black2);
+}
+
+/* Page header */
 h2 {
+    font-size: 3rem;
+    color: var(--white);
     margin: 0;
 }
 
+/* Section header */
+h3 {
+    font-size: 2rem;
+}
+
+/* Subsection header */
+h4 {
+    font-size: 1rem;
+}
+
 ::placeholder {
-    color: inherit;
+    color: var(--gray);
 }
 
 .center {
@@ -171,7 +191,7 @@ h2 {
 }
 
 .widget {
-    border: 3px solid var(--blue);
+    border: 1px solid var(--white);
     border-radius: 5px;
     color: var(--white);
     background-color: var(--black3);
