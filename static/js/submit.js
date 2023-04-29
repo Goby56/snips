@@ -25,7 +25,11 @@ function renderPreview(title, code, desc, lang) {
                 <div class="snippet">
                     <pre><code class="snippet-container ${lang}">
                     </code></pre>
-                    ${desc}
+                    <div class="description-outer">
+                        <div class="description-inner">
+                            ${desc}
+                        </div>
+                    </div>
                 </div>
             </div>  
         </div>`)
@@ -53,3 +57,11 @@ $("#preview-button").on("click", e => {
         $(e.currentTarget).text("Preview")
     }
 })
+
+$("#post-button").on("click", e => {
+    $("#editor-form").trigger("submit")
+})
+
+// $("#editor-form").on("submit", e => {
+    
+// })

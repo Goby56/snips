@@ -2,9 +2,9 @@
 
 
 #submit-container {
-    display: grid;
     height: 90%;
-    width: 60%;
+    width: 60vw;
+    display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 3fr 1fr;
     grid-column-gap: 0px;
@@ -12,11 +12,11 @@
 }
 
 #page-title {
-    grid-area: 1 / 1 / 2 / 2;
+    grid-area: 1 / 1 / 2 / 3;
 }
 
 #snippet-editor {
-    grid-area: 2 / 1 / 3 / 2;
+    grid-area: 2 / 1 / 3 / 3;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -30,25 +30,39 @@
 #snippet-preview {
     width: 100%;
     height: 100%;
-    grid-area: 2 / 1 / 3 / 2;
+    grid-area: 2 / 1 / 3 / 3;
+}
+
+#submit-and-preview {
+    grid-area: 3 / 1 / 4 / 2;
 }
 
 #editor-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 1vw;
+    grid-row-gap: 0px;
     width: 100%;
     height: 100%;
 }
 
+#title-input-container {
+    grid-area: 1 / 1 / 2 / 3;
+    justify-content: stretch;
+    width: 100%;
+}
 #title-input {
     font-size: 2rem;
 }
 
+#snippet-input-container {
+    grid-area: 2 / 1 / 3 / 3;
+    justify-content: stretch;
+    width: 100%;
+}
 #snippet-input {
-    font-size: 1.2rem;
+    font-size: 1rem;
     white-space: pre;
     overflow-wrap: normal;
     overflow-x: auto;
@@ -56,30 +70,19 @@
     height: 100%;
 }
 
+#description-input-container {
+    grid-area: 3 / 1 / 4 / 2;
+    justify-content: stretch;
+    width: 100%;
+}
 #description-input {
     font-size: 1.2rem;
     word-wrap: break-word;
     resize: none;
 }
 
-#snippet-options {
-    grid-area: 3 / 1 / 4 / 2;
-    display: grid;
+#language-dropdown-container {
+    grid-area: 3 / 2 / 4 / 3;
+    justify-content: stretch;
     width: 100%;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-}
-
-#option-section-left {
-    grid-area: 1 / 1 / 2 / 2;
-}
-
-#option-section-middle {
-    grid-area: 1 / 2 / 2 / 3;
-}
-
-#option-section-right {
-    grid-area: 1 / 3 / 2 / 4;
 }

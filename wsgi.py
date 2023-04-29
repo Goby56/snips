@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from database import Database
 
 db = Database()
@@ -10,8 +10,12 @@ def home():
     return render_template("home.html")
 
 @app.route("/share/")
-def share_snippet():
+def compose_snippet():
     return render_template("submit.html")
+
+@app.route("/post", methods=["POST"])
+def share_snippet():
+    return(request.form)
 
 # @app.route("/user/<username>")
 # def user_profile(username):

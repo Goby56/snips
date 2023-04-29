@@ -10,25 +10,26 @@
         <h1>Share snippets</h1>
     </div>
     <div id="snippet-editor">
-        <form id="editor-form" action="">
-            <input type="text" id="title-input" name="title" placeholder="Title" class="widget">
-            <textarea id="snippet-input" name="snippet" placeholder="Code goes here..." class="widget"></textarea>
-            <textarea id="description-input" name="description" placeholder="Description" class="widget"></textarea>
+        <form id="editor-form" action="{{ url_for('share_snippet') }}" method="post">
+            <div id="title-input-container" class="center">
+                <input type="text" id="title-input" name="title" placeholder="Title" class="widget">
+            </div>
+            <div id="snippet-input-container" class="center">
+                <textarea id="snippet-input" name="snippet" placeholder="Code goes here..." class="widget"></textarea>
+            </div>
+            <div id="description-input-container" class="center">
+                <textarea id="description-input" name="description" placeholder="Description" class="widget"></textarea>
+            </div>
+            <div id="language-dropdown-container" class="center">
+                <select id="language-dropdown" name="language" class="widget">
+                    <option value="auto">auto detect language</option>
+                </select>
+            </div>
         </form>
     </div>
-    <div id="snippet-options">
-        <div id="option-section-left" class="center">
-            <select id="language-dropdown" class="widget">
-                <option value="auto">auto detect language</option>
-            </select>
-        </div>
-        <div id="option-section-middle" class="center">
-            <button id="preview-button" class="button1">Preview</button>
-
-        </div>
-        <div id="option-section-right" class="center">
-            <button id="post-button" class="button2">Post</button>
-        </div>
+    <div id="submit-and-preview" class="center">
+        <button id="preview-button" class="button1">Preview</button>
+        <button id="post-button" class="button2">Post</button>
     </div>
 </div>
 
