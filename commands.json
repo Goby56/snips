@@ -1,5 +1,0 @@
-{
-    "fetch": {
-        "user_auth": "SELECT username, password, salt FROM user WHERE username='%s'"
-    }
-}

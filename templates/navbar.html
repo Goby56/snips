@@ -19,16 +19,19 @@
                 </form>
             </div>
         </div>
+        {% if authorized %}
+        <div class="nav-section" id="authorized">
+            <button id="share-snippets-button" class="button1">Share</button>
+            <img id="auth-user-icon" src="/static/images/user.svg" alt="">
+            <h1 id="auth-user-name">{{ user }}</h1>
+        </div>
+        {% elif not authorized %}
         <div class="nav-section" id="unauthorized">
             <button id="sign-in-button" class="button1">sign in</button>
             <button id="sign-up-button" class="button2">register</button>
             <img id="unauth-user-icon" src="/static/images/user.svg" alt="">
         </div>
-        <div class="nav-section hide" id="authorized">
-            <button id="share-snippets-button" class="button1">Share</button>
-            <img id="auth-user-icon" src="/static/images/user.svg" alt="">
-            <h2 id="auth-user-name">Goby</h2>
-        </div>
+        {% endif %}
         </div>
     </nav>
 {% endblock body %}

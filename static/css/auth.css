@@ -7,22 +7,30 @@ body {
                 var(--blue) 30%, var(--black2) 30%);
 }
 
-#logo {
+.logo {
     width: 20vh;
 }
 
-#login-form {
+form {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-#login-box {
+.auth-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: var(--light-transparent);
     border: 1px solid var(--white);
+}
+
+.authorized {
+    color: green;
+}
+
+.unauthorized {
+    color: red
 }

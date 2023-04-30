@@ -12,7 +12,7 @@ class TableMismatch(Exception):
 class Database:
     def __init__(self, name: str) -> None:
         self.name = name
-        with open("models.json") as f:
+        with open("./db/models.json") as f:
             self.models = json.load(f)
 
         self.db_connection = mysql.connector.connect(
@@ -23,9 +23,6 @@ class Database:
         self.cursor = self.db_connection.cursor()
 
         self.validate()
-
-    def execute(self, sql: str):
-        self.cursor.execute(sql)
     
     def validate(self):
         self.cursor.execute("SHOW DATABASES")
@@ -42,7 +39,7 @@ class Database:
                 self.create_table(table_name, columns)
 
     def create_table(self, name: str, columns: dict):
-        sql_columns = ["id int NOT NULL PRIMARY KEY"]
+        sql_columns = ["id int NOT NULL PRIMARY KEY AUTO_INCREMENT"]
         for col_name, sql_cmd in columns.items():
             sql_columns.append(sql_cmd % tuple(col_name.split(" ")))
         self.cursor.execute(f"CREATE TABLE {name} ({', '.join(sql_columns)})")
@@ -63,13 +60,7 @@ class Database:
     def insert_into(self, table: str, **kwargs):
         columns = ", ".join(kwargs.keys())
         values = ", ".join(kwargs.values())
-        self.execute(f"INSERT INTO {table} ({columns}) VALUES ({values})")
+        self.cursor.execute(f"INSERT INTO {table} ({columns}) VALUES ({values})")
 
-    # def authenticate(self, username: str, password: str):
-    #     if 
-    #     self.execute(f"SELECT username, password FROM user WHERE username='{username}'")
-    #     print(self.cursor)
-        
-    # def register(self, username: str, password: str):
-    #     self.execute(f"INSERT INTO user ")
+   
             

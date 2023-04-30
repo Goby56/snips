@@ -13,3 +13,7 @@ $("#unauth-user-icon").on("click", e => {
 $("#auth-user-icon #auth-user-name").on("click", e => {
     window.location = "/profile/"
 })
+
+$("#share-snippets-button").on("click", e => {
+    window.location = "/share/"
+})

@@ -1,0 +1,8 @@
+{
+    "fetch": {
+        "user_auth": "SELECT username, displayname, password FROM user WHERE username='%s'"
+    },
+    "create": {
+        "user": "INSERT INTO user (username, displayname, password) VALUES ('%s', '%s', '%s')"
+    }
+}

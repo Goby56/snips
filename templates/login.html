@@ -5,17 +5,23 @@
 {% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/css/auth.css">
 {% endblock head %}
 
 {% block body %}
-    <div id="login-box">
-        <img src="/static/images/ahsoka-rebel.svg" alt="" id="logo">
+    <div class="auth-box">
+        <img src="/static/images/ahsoka-rebel.svg" alt="" class="logo">
         <h3>Log in</h3>
-        <form action="/login/" method="post" id="login-form">
-            <input type="text" name="username" id="username-input" class="widget">
-            <input type="text" name="password" id="password-input" class="widget">
-
+        <form action="/login/" method="post">
+            <input type="text" name="username" class="widget">
+            <input type="text" name="password" class="widget">
+            {% if message %}
+                {% if authorized %}
+                    <p class="authorized">{{ message }}</p>
+                {% elif not authorized %}
+                    <p class="unauthorized">{{ message }}</p>
+                {% endif %}
+            {% endif %}
             <input type="submit" value="Log in" class="widget">
         </form>
         <a href="/register/">Don't have an account? Register.</a>
