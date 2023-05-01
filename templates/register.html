@@ -13,7 +13,9 @@
         <img src="/static/images/ahsoka-rebel.svg" alt="" class="auth-logo">
         <h3 class="auth-type-title">Register</h3>
         {% if message %}
-                <p class="auth-feedback-message">{{ message }}</p>
+            <p class="auth-feedback-message">{{ message }}</p>
+        {% elif not message %}
+            <p class="auth-feedback-message"> </p>
         {% endif %}
         <form action="/register/" method="post" class="auth-form">
             <input type="text" name="username" class="auth-name-input input2" placeholder="username">
