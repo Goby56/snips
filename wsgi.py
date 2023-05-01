@@ -53,12 +53,13 @@ class Server:
         
         result = self.db_exec(self.cmds["fetch"]["user_auth"], username.lower())
         if not result:
-            return AUTH_RESP["USER_NOT_FOUND"]
+            return AUTH_RESP["INCORRECT_DETAILS"]
         
         username, displayname, hashed_password = result[0]
         if not utils.verify_password(password, hashed_password):
-            return AUTH_RESP["INCORRECT_PASSWORD"]
+            return AUTH_RESP["INCORRECT_DETAILS"]
         
+        # TODO ALTER TABLE (last_login)
         token = utils.generate_token(displayname, self.secret_key)
         return AUTH_RESP["LOGIN_SUCCESSFUL"] | {"token": token}
         
@@ -96,15 +97,16 @@ def share_snippet():
         return request.form
     return render_template("submit.html", **session)
 
+# TODO GENERALIZED FORM ROUTE (login & register is very similar)
 @app.route("/login/", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
         resp = server.authenticate(request.form["username"], 
-                                               request.form["password"])
+                                   request.form["password"])
         if resp["authorized"]:
             response = make_response(redirect(url_for("home")))
             response.set_cookie("token", resp["token"])
-            return response, resp["code"]
+            return response
 
         return render_template("login.html", **resp), resp["code"]
 
@@ -114,12 +116,11 @@ def login():
 def register():
     if request.method == "POST":
         resp = server.register(request.form["username"], 
-                                           request.form["password"])
+                               request.form["password"])
         if resp["authorized"]:
             response = make_response(redirect(url_for("home")))
             response.set_cookie("token", resp["token"])
-            return response, resp["code"]
-        
+            return response
         return render_template("register.html", **resp), resp["code"]
 
     return render_template("register.html")

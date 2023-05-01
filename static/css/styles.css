@@ -55,7 +55,7 @@ h4 {
 }
 
 ::placeholder {
-    color: var(--gray);
+    color: inherit;
 }
 
 .center {
@@ -77,7 +77,7 @@ h4 {
     display: none !important;
 }
 
-.button1, .button2 {
+.button1, .button2, .button3 {
     font-size: 1rem;
     width: fit-content;
     height: auto;
@@ -86,8 +86,8 @@ h4 {
     transition: 300ms;
 }
 
-.button1:hover, .button2:hover {
-    transform: scale(0.95);
+.button1:hover, .button2:hover, .button3:hover {
+    transform: scale(0.98);
 }
 
 .button1 {
@@ -100,6 +100,27 @@ h4 {
     color: var(--white);
     background-color: var(--orange);
     border: 1px solid var(--white);
+}
+
+.button3 {
+    color: var(--white);
+    background-color: var(--blue);
+    border: 1px solid var(--blue);
+}
+
+.input1, .input2 {
+    font-size: 1rem;
+    width: fit-content;
+    height: auto;
+    border-radius: 10px;
+    transition: 300ms;
+}
+
+.input2 {
+    color: var(--white);
+    background-color: var(--blue);
+    border: 1px solid var(--blue);
+    outline: none;
 }
 
 .post {
@@ -192,9 +213,9 @@ h4 {
 
 .widget {
     border: 1px solid var(--white);
-    border-radius: 5px;
+    font-size: 1.3rem;
     color: var(--white);
-    background-color: var(--black3);
+    background-color: var(--blue);
     outline: none;
     width: 100%;
 }

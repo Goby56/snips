@@ -61,7 +61,3 @@ $("#preview-button").on("click", e => {
 $("#post-button").on("click", e => {
     $("#editor-form").trigger("submit")
 })
-
-// $("#editor-form").on("submit", e => {
-    
-// })

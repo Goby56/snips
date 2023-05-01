@@ -17,3 +17,16 @@ $("#auth-user-icon #auth-user-name").on("click", e => {
 $("#share-snippets-button").on("click", e => {
     window.location = "/share/"
 })
+
+console.log(HLJS_STYLES)
+
+let addStylesToDropdown = async () => {
+    await HLJS_STYLES.then(result => {
+        result.forEach(style => {
+            let styleName = style.split("/").at(-1).slice(0, -8)
+            $("#styles-dropdown").append(`<option value='${style}'>${styleName}</option`)
+        })
+    })
+}
+
+addStylesToDropdown()

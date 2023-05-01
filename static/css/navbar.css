@@ -6,35 +6,83 @@ body {
 }
 
 #navbar {
+    display: grid;
+    grid-template-columns: 20% 10% repeat(2, 1fr) 10% 20%;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 75px;
+}
+
+#navbar-bg {
+    height: 100%;
+    z-index: -1;
+    grid-area: 1 / 1 / 2 / 7;
+    background: repeating-linear-gradient(45deg, var(--white) 0%, 
+                    var(--white) 30%, var(--blue) 30%, 
+                    var(--blue) 70%, var(--white) 70%);
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background: repeating-linear-gradient(45deg, var(--white) 0%, 
-                                        var(--white) 33%, var(--blue) 33%, 
-                                        var(--blue) 67%, var(--white) 67%);
 }
 
-.nav-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90%;
-    gap: 20px;
-    width: 30%;
+#logo-section {
+    grid-area: 1 / 1 / 2 / 2;
+    gap: 1vw;
+    place-self: center;
+    width: 100%;
+    height: 75px;
+}
+
+#style-selection-section {
+    grid-area: 1 / 2 / 2 / 3;
+    place-self: center;
+    width: 80%;
+    height: 75px;
+}
+
+#nav-search-section {
+    grid-area: 1 / 3 / 2 / 5;
+    place-self: center;
+    width: 90%;
+    height: 75px;
+}
+
+#nav-share-section {
+    grid-area: 1 / 5 / 2 / 6;
+    place-self: center;
+    width: 100%;
+    height: 75px;
+}
+
+#nav-auth-section {
+    grid-area: 1 / 6 / 2 / 7;
+    place-self: center;
+    width: 100%;
+    height: 75px;
 }
 
 #nav-logo {
-    height: 100%;
+    height: 90%;
     width: auto;
 }
 
 #nav-title {
+    font-size: min(2vw, 2rem);
     color: var(--black2);
+}
+
+#styles-dropdown {
+    width: 60%;
 }
 
 #nav-search {
@@ -81,18 +129,29 @@ body {
 
 @media((width <= 750px) or (orientation: portrait)) {
     #navbar {
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 20% 10% repeat(2, 1fr) 10% 20%;
+        grid-template-rows: 2fr;
+        grid-column-gap: 0px;
+        grid-row-gap: 0px;
+    }
+
+    #navbar-bg {
         background: repeating-linear-gradient(45deg, var(--white) 0%, 
-                                        var(--white) 25%, var(--blue) 25%, 
-                                        var(--blue) 75%, var(--white) 75%);
+                                            var(--white) 25%, var(--blue) 25%, 
+                                            var(--blue) 75%, var(--white) 75%);
     }
 
-    .nav-section {
-        width: 20%;
+    #nav-search-section {
+        grid-area: 2 / 1 / 3 / 7;
     }
 
-    #nav-search-container {
-        width: 40%;
+    #style-selection-section {
+        grid-area: 1 / 3 / 2 / 4;
+    }
+
+    #nav-share-section {
+        grid-area: 1 / 4 / 2 / 5;
     }
 
     #nav-title {

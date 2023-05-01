@@ -4,7 +4,7 @@ import jwt, bcrypt
 def generate_token(username: str, secret_key: str):
     payload = {
         "user": username,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=1)
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
     }
     return jwt.encode(payload, secret_key)
 
