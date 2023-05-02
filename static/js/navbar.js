@@ -30,3 +30,15 @@ let addStylesToDropdown = async () => {
 }
 
 addStylesToDropdown()
+
+// const styleRegex = "highlight\.js\/(\d|\.)+\/styles\/.+\.min\.css$";
+
+function setColorThemePreference(theme) {
+    window.localStorage.setItem("colorTheme", theme)
+}
+
+$("#styles-dropdown").on("change", function() {
+    $("link[href*='highlight.js']").attr("disabled", true)
+    $(`link[href*='${this.value}']`).attr("disabled", false)
+    setColorThemePreference(this.value)
+})

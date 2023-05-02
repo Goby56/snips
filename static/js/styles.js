@@ -11,8 +11,14 @@ const requestHLJSstyles = async () => {
 
 const HLJS_STYLES = requestHLJSstyles().then(result => {
     let version = result.version;
-    result.styles.forEach(style => {
-        $("head").append(`<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${version}/${style}" disabled>`);
+    let colorThemePreference = localStorage.getItem("colorTheme")
+    result.styles.forEach((style) => {
+        let disabledAttr = colorThemePreference == style ? "" : "disabled"
+        $("head").append(`
+        <link rel="stylesheet" 
+              href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${version}/${style}" 
+              ${disabledAttr}>`
+        );
     })
     return result.styles;
 })
