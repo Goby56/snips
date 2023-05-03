@@ -9,6 +9,9 @@
     "post": {
         "title": "%s varchar(255)",
         "content": "%s text",
+        "description": "%s text",
+        "url_path": "%s varchar(255)",
+        "programming_language": "%s varchar(30)",
         "publisher_id": " %s int",
         "publisher_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
         "votes": "%s int DEFAULT 0",

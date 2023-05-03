@@ -1,10 +1,10 @@
-import datetime
+import datetime, string, random
 import jwt, bcrypt
 
-def generate_token(username: str, secret_key: str):
+def generate_token(username: str, secret_key: str, invalid: bool = False):
     payload = {
         "user": username,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=15) * (-1)**invalid
     }
     return jwt.encode(payload, secret_key)
 
@@ -31,3 +31,6 @@ def hash_password(password: str):
 
 def verify_password(pw: str, hashed_pw: bytearray):
     return bcrypt.checkpw(pw.encode("utf-8"), bytes(hashed_pw))
+
+def generate_post_suffix():
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=10))

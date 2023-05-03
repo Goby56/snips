@@ -31,6 +31,10 @@ body {
     background-color: var(--black2);
 }
 
+a {
+    color: var(--orange);
+}
+
 /* Nav title */
 h1 {
     font-size: 2rem;

@@ -69,6 +69,7 @@ body {
     place-self: center;
     width: 100%;
     height: 75px;
+    gap: 1vw;
 }
 
 #nav-logo {

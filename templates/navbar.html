@@ -29,8 +29,8 @@
         </div>
         {% if authorized %}
             <div id="nav-auth-section">
-                <img id="auth-user-icon" src="/static/images/user.svg" alt="">
                 <h1 id="auth-user-name">{{ user }}</h1>
+                <button id="log-out-button" class="button2">log out</button>
             </div>
         {% elif not authorized %}
             <div id="nav-auth-section">

@@ -14,6 +14,8 @@
         <h3 class="auth-type-title">Log in</h3>
         {% if message %}
             <p class="auth-feedback-message">{{ message }}</p>
+        {% elif authorized %}
+            <p class="auth-feedback-message">You are already logged in as {{ user }}</p>
         {% elif not message %}
             <p class="auth-feedback-message"> </p>
         {% endif %}

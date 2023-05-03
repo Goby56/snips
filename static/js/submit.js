@@ -11,7 +11,7 @@ hljs.listLanguages().forEach(lang => {
 })
 
 function renderPreview(title, code, desc, lang) {
-    if (!title) title = "I am bad with titles"
+    if (!title) title = "Naming variables is not my thing"
     if (lang != "auto") {
         lang = "language-" + lang
     } else {

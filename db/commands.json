@@ -1,8 +1,12 @@
 {
     "fetch": {
-        "user_auth": "SELECT username, displayname, password FROM user WHERE username='%s'"
+        "user_auth": "SELECT username, displayname, password FROM user WHERE username='%s'",
+        "user_id": "SELECT id FROM user WHERE username='%s'",
+        "post": "SELECT * FROM post WHERE url_path='%s'",
+        "post_url_path": "SELECT url_path FROM post WHERE url_path='%s'"
     },
     "create": {
-        "user": "INSERT INTO user (username, displayname, password) VALUES ('%s', '%s', '%s')"
+        "user": "INSERT INTO user (username, displayname, password) VALUES ('%s', '%s', '%s')",
+        "post": "INSERT INTO post (title, content, description, url_path, programming_language, publisher_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')"
     }
 }

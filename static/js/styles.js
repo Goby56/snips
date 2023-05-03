@@ -9,6 +9,14 @@ const requestHLJSstyles = async () => {
     })
 }
 
+function setColorThemePreference(theme) {
+    window.localStorage.setItem("colorTheme", theme);
+}
+
+function getColorThemePreference() {
+    return window.localStorage.getItem("colorTheme");
+}
+
 const HLJS_STYLES = requestHLJSstyles().then(result => {
     let version = result.version;
     let colorThemePreference = localStorage.getItem("colorTheme")

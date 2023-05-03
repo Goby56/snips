@@ -34,8 +34,15 @@
             </form>
         </div>
         <div id="submit-and-preview" class="center">
-            <button id="preview-button" class="button1">Preview</button>
-            <button id="post-button" class="button2">Post</button>
+            <div class="center">
+                {% if response_message %}
+                    <p>{{ response_message }}</p>
+                {% endif %}
+            </div>
+            <div class="center">
+                <button id="preview-button" class="button1">Preview</button>
+                <button id="post-button" class="button2">Post</button>
+            </div>
         </div>
     </div>
 {% endblock body %}
