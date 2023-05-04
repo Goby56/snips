@@ -1,4 +1,4 @@
-import datetime, string, random
+import datetime, string, random, urllib
 import jwt, bcrypt
 
 def generate_token(username: str, secret_key: str, invalid: bool = False):
@@ -34,3 +34,6 @@ def verify_password(pw: str, hashed_pw: bytearray):
 
 def generate_post_suffix():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+
+def str2url(text: str):
+    return urllib.parse.quote(text.strip().replace(" ", "-"))

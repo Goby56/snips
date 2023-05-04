@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="post">
+    <p class="title">{{ title }}</p>
+    {{ publisher }}
+    <div class="snippet">
+        <pre><code class="snippet-container ${lang}">
+            {{ snippet }}
+        </code></pre>
+        <div class="description-outer">
+            <div class="description-inner">
+                {{ description }}
+            </div>
+        </div>
+    </div>
+    {{ pub_date }}
+</div>
+{% endblock body %}

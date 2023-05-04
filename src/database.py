@@ -20,18 +20,18 @@ class Database:
             user="root",
             password=""
         )
-        self.cursor = self.db_connection.cursor()
+        self.cursor = self.db_connection.cursor(prepared=True)
 
         self.validate()
     
     def validate(self):
         self.cursor.execute("SHOW DATABASES")
-        if self.name not in map(lambda x: x[0], self.cursor):
+        if self.name not in map(lambda x: x[0], self.cursor.fetchall()):
             self.cursor.execute(f"CREATE DATABASE {self.name}")
         self.db_connection.connect(database=self.name)
-
+        
         self.cursor.execute("SHOW TABLES")
-        existing_tables = list(map(lambda x: x[0], self.cursor))
+        existing_tables = list(map(lambda x: x[0], self.cursor.fetchall()))
         for table_name, columns in self.models.items():
             if table_name in existing_tables:
                 self.validate_table(table_name)

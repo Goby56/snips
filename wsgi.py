@@ -1,3 +1,4 @@
+from ctypes import util
 from email import message
 from urllib import response
 from flask import Flask, redirect, render_template, \
@@ -58,10 +59,10 @@ class Server:
             # self.db.cursor.execute(sql_cmd, args) causes unbalanced quotations when logging in
             # self.db.cursor.execute(sql_cmd % args) causes unbalanced quotations when posting
             # wtf
-            self.db.cursor.execute(sql_cmd % args)
+            self.db.cursor.execute(sql_cmd, args)
         if commit:
             self.db.db_connection.commit()
-        return list(self.db.cursor)
+        return self.db.cursor.fetchall()
 
     def authenticate(self, username: str, password: str):
         if not username or not password:
@@ -101,20 +102,21 @@ class Server:
                                     publisher_name.lower())[0][0]
         if not title:
             title = "Naming variables is not my thing"
-        original_title = title
-        title = title.replace(" ", "-")
-        no_spaces_title = title
-        while True:
-            url_path = urllib.parse.quote(title)
-            result = self.db_exec(self.cmds["fetch"]["post_url_path"], url_path)
-            if not result:
-                break
-            title = no_spaces_title + "-" + utils.generate_post_suffix()
-            
+        # original_title = title
+        # title = title.replace(" ", "-")
+        # no_spaces_title = title
+        # while True:
+        #     url_path = urllib.parse.quote(title)
+        #     result = self.db_exec(self.cmds["fetch"]["post_url_path"], url_path)
+        #     if not result:
+        #         break
+        #     title = no_spaces_title + "-" + utils.generate_post_suffix()
+        url_path = utils.str2url(title)
         self.db_exec(self.cmds["create"]["post"], 
-                     original_title, content, description, url_path,
-                     language, publisher_id, commit=True)
-        return POST_RESP["POST_CREATED"] | {"location": url_path}
+                     title, content, description, language, 
+                     publisher_id, commit=True)
+        post_id = self.db_exec("SELECT LAST_INSERT_ID()")[0][0]
+        return POST_RESP["POST_CREATED"] | {"post_id": post_id, "post_name": url_path}
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "thoy"
@@ -131,6 +133,7 @@ def home():
 def share_snippet():
     session = utils.get_session(request, app.secret_key)
     if not session["authorized"]:
+        # Redirect to share when logged in
         return redirect(url_for("login"))
     if request.method == "POST":
         resp = server.add_post(request.form["title"],
@@ -139,17 +142,39 @@ def share_snippet():
                                request.form["language"],
                                session["user"])
         if resp["post_created"]:
-            return redirect(url_for("post_comments", post_name=resp["location"]))
+            return redirect(url_for("post_comments", 
+                                    post_id=resp["post_id"], 
+                                    post_name=resp["post_name"]))
         return render_template("submit.html", **resp), resp["code"]
     return render_template("submit.html", **session)
 
-@app.route("/comments/<post_name>", methods=["POST", "GET"])
-def post_comments(post_name):
-    post = server.db_exec(server.cmds["fetch"]["post"], post_name)
-    if post:
-        return post
-    error = f"The post '{post_name}' does not exist."
-    return render_template("404.html", message=error), 404
+@app.route("/comments/<int:post_id>", methods=["POST", "GET"])
+@app.route("/comments/<int:post_id>/<post_name>", methods=["POST", "GET"])
+def post_comments(post_id, post_name=None):
+    result = server.db_exec(server.cmds["fetch"]["post"], post_id)
+    if not result:
+        if post_name:
+            title = post_name.replace("-", " ")
+            error = f"The post '{title}' does not exist."
+        else:
+            error = f"The post you're looking for does not exist."
+        return render_template("404.html", message=error), 404
+    
+    post_id, title, code, desc, prog_lang, publisher_id, votes, pub_date = result[0]
+    
+    url_title = utils.str2url(title)
+    if post_name != url_title:
+        return redirect(url_for("post_comments", 
+                                post_id=post_id, 
+                                post_name=url_title))
+    publisher = server.db_exec(server.cmds["fetch"]["user_name"], publisher_id)
+    if not publisher:
+        publisher = "User deleted"
+    return render_template("post.html", title=title, 
+                           snippet=code, description=desc, 
+                           prog_lang=prog_lang, publisher=publisher[0][0], 
+                           votes=votes, pub_date=pub_date)
+    
 
 # TODO GENERALIZED FORM ROUTE (login & register is very similar)
 @app.route("/login/", methods=["POST", "GET"])
