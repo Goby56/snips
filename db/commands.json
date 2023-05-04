@@ -9,5 +9,8 @@
     "create": {
         "user": "INSERT INTO user (username, displayname, password) VALUES (?, ?, ?)",
         "post": "INSERT INTO post (title, content, description, programming_language, publisher_id) VALUES (?, ?, ?, ?, ?)"
+    },
+    "update": {
+        "user_last_login": "UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE username = ?"
     }
 }

@@ -76,7 +76,8 @@ class Server:
         if not utils.verify_password(password, hashed_password):
             return AUTH_RESP["INCORRECT_DETAILS"]
         
-        # TODO ALTER TABLE (last_login)
+        self.db_exec(self.cmds["update"]["user_last_login"], 
+                     username.lower(), commit=True)
         token = utils.generate_token(displayname, self.secret_key)
         return AUTH_RESP["LOGIN_SUCCESSFUL"] | {"token": token}
         
@@ -102,15 +103,7 @@ class Server:
                                     publisher_name.lower())[0][0]
         if not title:
             title = "Naming variables is not my thing"
-        # original_title = title
-        # title = title.replace(" ", "-")
-        # no_spaces_title = title
-        # while True:
-        #     url_path = urllib.parse.quote(title)
-        #     result = self.db_exec(self.cmds["fetch"]["post_url_path"], url_path)
-        #     if not result:
-        #         break
-        #     title = no_spaces_title + "-" + utils.generate_post_suffix()
+            
         url_path = utils.str2url(title)
         self.db_exec(self.cmds["create"]["post"], 
                      title, content, description, language, 
