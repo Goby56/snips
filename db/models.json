@@ -1,19 +1,28 @@
 {
     "user": {
-        "username": "%s varchar(255)",
-        "displayname": "%s varchar(255)",
-        "password": "%s binary(60)",
-        "last_login": "%s timestamp DEFAULT CURRENT_TIMESTAMP",
-        "date_joined": "%s datetime DEFAULT CURRENT_TIMESTAMP"
+        "columns": {
+            "username": "%s varchar(255)",
+            "displayname": "%s varchar(255)",
+            "password": "%s binary(60)",
+            "last_login": "%s timestamp DEFAULT CURRENT_TIMESTAMP",
+            "date_joined": "%s datetime DEFAULT CURRENT_TIMESTAMP"
+        },
+        "constraints": {
+        }
     },
     "post": {
-        "title": "%s varchar(255)",
-        "content": "%s text",
-        "description": "%s text",
-        "programming_language": "%s varchar(30)",
-        "publisher_id": " %s int",
-        "publisher_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
-        "votes": "%s int DEFAULT 0",
-        "pub_date": "%s timestamp DEFAULT CURRENT_TIMESTAMP"
+        "columns": {
+            "title": "%s varchar(255)",
+            "content": "%s text",
+            "description": "%s text",
+            "programming_language": "%s varchar(30)",
+            "publisher_id": " %s int",
+            "votes": "%s int DEFAULT 0",
+            "pub_date": "%s timestamp DEFAULT CURRENT_TIMESTAMP"
+        },
+        "constraints": {
+            "publisher_id user": "FOREIGN KEY (%s) REFERENCES %s(id)"
+        }
+        
     }
 }

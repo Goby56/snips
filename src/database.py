@@ -32,11 +32,11 @@ class Database:
         
         self.cursor.execute("SHOW TABLES")
         existing_tables = list(map(lambda x: x[0], self.cursor.fetchall()))
-        for table_name, columns in self.models.items():
+        for table_name, model in self.models.items():
             if table_name in existing_tables:
                 self.validate_table(table_name)
             else:
-                self.create_table(table_name, columns)
+                self.create_table(table_name, model["columns"])
 
     def create_table(self, name: str, columns: dict):
         sql_columns = ["id int NOT NULL PRIMARY KEY AUTO_INCREMENT"]

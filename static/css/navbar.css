@@ -16,6 +16,7 @@ body {
     left: 0;
     width: 100vw;
     height: 75px;
+    z-index: 2;
 }
 
 #navbar-bg {

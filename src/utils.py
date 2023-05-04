@@ -1,4 +1,4 @@
-import datetime, string, random, urllib
+import datetime, string, random, urllib, json
 import jwt, bcrypt
 
 def generate_token(username: str, secret_key: str, invalid: bool = False):
@@ -37,3 +37,6 @@ def generate_post_suffix():
 
 def str2url(text: str):
     return urllib.parse.quote(text.strip().replace(" ", "-"))
+
+def format_posts(posts: list, columns: dict):
+    return [{k: p[i] for i, k in enumerate(["id"] + list(columns.keys()))} for p in posts]

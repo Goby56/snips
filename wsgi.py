@@ -60,9 +60,6 @@ class Server:
         if len(args) < 1:
             self.db.cursor.execute(sql_cmd)
         else:
-            # self.db.cursor.execute(sql_cmd, args) causes unbalanced quotations when logging in
-            # self.db.cursor.execute(sql_cmd % args) causes unbalanced quotations when posting
-            # wtf
             self.db.cursor.execute(sql_cmd, args)
         if commit:
             self.db.db_connection.commit()
@@ -117,6 +114,10 @@ class Server:
                      publisher_id, commit=True)
         post_id = self.db_exec("SELECT LAST_INSERT_ID()")[0][0]
         return POST_RESP["POST_CREATED"] | {"post_id": post_id, "post_name": url_path}
+    
+    def get_user(self, user_id: int):
+        user = self.db_exec(self.cmds["fetch"]["user_name"], user_id)
+        return user[0][0] if user else "User deleted"
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "thoy"
@@ -127,7 +128,9 @@ server = Server(app.secret_key)
 @app.route("/")
 def home():
     session = utils.get_session(request, app.secret_key)
-    return render_template("home.html", **session)
+    posts = server.db_exec(server.cmds["fetch"]["recent_posts"], 10)
+    formatted_posts = utils.format_posts(posts, server.db.models["post"]["columns"])
+    return render_template("home.html", **(session | {"posts": formatted_posts}))
 
 @app.route("/share/", methods=["POST", "GET"])
 def share():
@@ -175,7 +178,6 @@ def post_comments(post_id, post_name=None):
                            prog_lang=prog_lang, publisher=publisher[0][0], 
                            votes=votes, pub_date=pub_date)
     
-
 # TODO GENERALIZED FORM ROUTE (login & register is very similar)
 @app.route("/login/", methods=["POST", "GET"])
 def login():
@@ -219,6 +221,12 @@ def page_not_found(error):
 # @app.route("/user/<username>")
 # def user_profile(username):
 #     return render_template("<p>You are on %s's profile</p>" % username)
+
+@app.context_processor
+def example():
+    return {
+        "id2username": server.get_user
+    }
 
 
 if __name__ == "__main__":

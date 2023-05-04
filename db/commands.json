@@ -4,7 +4,8 @@
         "user_id": "SELECT id FROM user WHERE username=?",
         "user_name": "SELECT displayname FROM user WHERE id=?",
         "post": "SELECT * FROM post WHERE id=?",
-        "post_url_path": "SELECT url_path FROM post WHERE url_path=?"
+        "highest_voted_posts": "SELECT * FROM post ORDER BY votes DESC LIMIT ?",
+        "recent_posts": "SELECT * FROM post ORDER BY pub_date DESC LIMIT ?" 
     },
     "create": {
         "user": "INSERT INTO user (username, displayname, password) VALUES (?, ?, ?)",

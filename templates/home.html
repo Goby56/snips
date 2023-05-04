@@ -1,8 +1,35 @@
 {% extends "navbar.html" %}
 
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="/static/css/home.css">
+{% endblock head %}
+
 {% block body %}
-    {{ super() }}
-    <p>Penos</p>
+{{ super() }}
+{% for post in posts %}
+    <div class="post">
+        <p class="title">{{ post["title"] }}</p>
+        {{ id2username( post["publisher_id"] ) }}
+        <div class="snippet">
+            {% if post["programming_language"] != "auto" %}
+                <pre><code class="snippet-container language-{{ post['programming_language'] }}">
+            {% else %}
+                <pre><code class="snippet-container">
+            {% endif %}     
+{{ post["content"] }}
+            </code></pre>
+            <div class="description-outer">
+                <div class="description-inner">
+                    {{ post["description"] }}
+                </div>
+            </div>
+        </div>
+        {{ pub_date }}
+    </div>
+{% endfor %}
+
+    
 {% endblock body %}
 
 {% block scripts %}
