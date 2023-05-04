@@ -10,7 +10,7 @@ body {
 .auth-widget {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 5fr 3fr 1fr repeat(2, 2fr) 3fr 1fr;
+    grid-template-rows: 5fr 3fr 1fr 7fr 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     width: 25vw;
@@ -40,39 +40,29 @@ body {
     width: 100%;
     height: 100%;
     place-self: center;
-    grid-area: 4 / 1 / 7 / 2;
-    display: grid;
+    grid-area: 4 / 1 / 5 / 2;
+    /* display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(2, 2fr) 3fr;
     grid-column-gap: 0px;
-    grid-row-gap: 0px;
+    grid-row-gap: 0px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1vh;
+}
+
+.auth-form * {
+    width: 70%;
+    height: 70%;
+    place-self: center;
 }
 
 .auth-switch-link {
     place-self: center;
-    grid-area: 7 / 1 / 8 / 2;
+    grid-area: 5 / 1 / 6 / 2;
     color: var(--blue);
-}
-
-.auth-name-input {
-    width: 70%;
-    height: 70%;
-    place-self: center;
-    grid-area: 1 / 1 / 2 / 2;
-}
-
-.auth-pass-input {
-    width: 70%;
-    height: 70%;
-    place-self: center;
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-.auth-submit-button {
-    width: 70%;
-    height: 70%;
-    place-self: center;
-    grid-area: 3 / 1 / 4 / 2;
 }
 
 .auth-box {

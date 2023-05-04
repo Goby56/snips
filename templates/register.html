@@ -12,15 +12,16 @@
     <div class="auth-widget">
         <img src="/static/images/ahsoka-rebel.svg" alt="" class="auth-logo">
         <h3 class="auth-type-title">Register</h3>
-        {% if message %}
-            <p class="auth-feedback-message">{{ message }}</p>
-        {% elif not message %}
-            <p class="auth-feedback-message"> </p>
+        {% if response_message %}
+            <p class="auth-feedback-message">{{ response_message }}</p>
+        {% elif not response_message %}
+            <p class="auth-feedback-message">&hairsp;</p>
         {% endif %}
-        <form action="/register/" method="post" class="auth-form">
-            <input type="text" name="username" class="auth-name-input input2" placeholder="username">
-            <input type="password" name="password" class="auth-pass-input input2" placeholder="password">
-            <input type="submit" value="Register" class="auth-submit-button button3">
+        <form action="/register/" method="post" class="auth-form" id="register-form">
+            <input type="text" name="username" class="input2" placeholder="username">
+            <input type="password" name="password" class="input2" placeholder="password">
+            <input type="password" name="passverify" class="input2" placeholder="verify password">
+            <input type="submit" value="Register" class="button3">
         </form>
         <a href="/login/" class="auth-switch-link">Already have an account? Log in.</a>
     </div>

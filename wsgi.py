@@ -12,6 +12,10 @@ AUTH_RESP = {
         "authorized": False, "code": 400, 
         "response_message": "Username or password missing"
     },
+    "PASSWORDS_DOES_NOT_MATCH": {
+        "authorized": False, "code": 400,
+        "response_message": "Passwords needs to match"
+    },
     "INCORRECT_DETAILS": {
         "authorized": False, "code": 401, 
         "response_message": "Username or password is incorrect"
@@ -81,9 +85,12 @@ class Server:
         token = utils.generate_token(displayname, self.secret_key)
         return AUTH_RESP["LOGIN_SUCCESSFUL"] | {"token": token}
         
-    def register(self, username: str, password: str):
+    def register(self, username: str, password: str, passverify: str):
         if not username or not password:
             return AUTH_RESP["INSUFFICENT_DETAILS"]
+        
+        if password != passverify:
+            return AUTH_RESP["PASSWORDS_DOES_NOT_MATCH"]
 
         user = self.db_exec(self.cmds["fetch"]["user_auth"], username.lower())
         if user:
@@ -103,7 +110,7 @@ class Server:
                                     publisher_name.lower())[0][0]
         if not title:
             title = "Naming variables is not my thing"
-            
+
         url_path = utils.str2url(title)
         self.db_exec(self.cmds["create"]["post"], 
                      title, content, description, language, 
@@ -189,7 +196,8 @@ def login():
 def register():
     if request.method == "POST":
         resp = server.register(request.form["username"], 
-                               request.form["password"])
+                               request.form["password"],
+                               request.form["passverify"])
         if resp["authorized"]:
             response = make_response(redirect(url_for("home")))
             response.set_cookie("token", resp["token"])
