@@ -19,7 +19,7 @@
         {% elif not message %}
             <p class="auth-feedback-message"> </p>
         {% endif %}
-        <form action="/login/" method="post" class="auth-form">
+        <form action="{{ url_for('login', redirect_to=redirect_to) }}" method="post" class="auth-form">
             <input type="text" name="username" class="auth-name-input input2" placeholder="username">
             <input type="password" name="password" class="auth-pass-input input2" placeholder="password">
             <input type="submit" value="Log in" class="auth-submit-button button3">

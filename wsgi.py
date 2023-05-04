@@ -130,11 +130,11 @@ def home():
     return render_template("home.html", **session)
 
 @app.route("/share/", methods=["POST", "GET"])
-def share_snippet():
+def share():
     session = utils.get_session(request, app.secret_key)
     if not session["authorized"]:
         # Redirect to share when logged in
-        return redirect(url_for("login"))
+        return redirect(url_for("login", redirect_to="share"))
     if request.method == "POST":
         resp = server.add_post(request.form["title"],
                                request.form["snippet"],
@@ -180,16 +180,17 @@ def post_comments(post_id, post_name=None):
 @app.route("/login/", methods=["POST", "GET"])
 def login():
     session = utils.get_session(request, app.secret_key)
+    endpoint = request.args.get("redirect_to", "home")
     if request.method == "POST":
         resp = server.authenticate(request.form["username"], 
                                    request.form["password"])
         if resp["authorized"]:
-            response = make_response(redirect(url_for("home")))
+            response = make_response(redirect(url_for(endpoint)))
             response.set_cookie("token", resp["token"])
             return response
 
         return render_template("login.html", **resp), resp["code"]
-    return render_template("login.html", **session)
+    return render_template("login.html", **(session | {"redirect_to": endpoint}))
 
 @app.route("/register/", methods=["POST", "GET"])
 def register():
@@ -217,10 +218,6 @@ def page_not_found(error):
 # @app.route("/user/<username>")
 # def user_profile(username):
 #     return render_template("<p>You are on %s's profile</p>" % username)
-
-# @app.route("/post/<int:post_id>")
-# def post(post_id):
-#     return render_template("<p>This is post number %s</p>" % post_id)
 
 
 if __name__ == "__main__":
