@@ -12,6 +12,8 @@
         "post": "INSERT INTO post (title, content, description, programming_language, publisher_id) VALUES (?, ?, ?, ?, ?)"
     },
     "update": {
-        "user_last_login": "UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE username = ?"
+        "user_last_login": "UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE username = ?",
+        "upvote_post": "UPDATE post SET votes = votes + 1 WHERE id = ?",
+        "downvote_post": "UPDATE post SET votes = votes - 1 WHERE id = ?"
     }
 }

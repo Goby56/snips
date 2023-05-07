@@ -194,6 +194,14 @@ h4 {
     overflow-y: auto;
     overflow-x: auto;
 }
+.post-info {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.post-info div {
+    gap: 1vw;
+}
 
 @media(orientation: landscape) {
     .snippet pre code {

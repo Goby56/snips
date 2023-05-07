@@ -23,6 +23,16 @@
         "constraints": {
             "publisher_id user": "FOREIGN KEY (%s) REFERENCES %s(id)"
         }
-        
+    },
+    "post_votes": {
+        "columns": {
+            "value": "%s int",
+            "voter_id": "%s int",
+            "post_id": "%s int"
+        },
+        "constraints": {
+            "voter_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
+            "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)"
+        }
     }
 }

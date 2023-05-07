@@ -214,6 +214,27 @@ def logout():
     response.set_cookie("token", utils.generate_token("", app.secret_key, True))
     return response
 
+
+# TODO ONE VOTING ROUTE (OR GENERALIZED) AND AUTO CHECK IF USER HAS ALREADY
+# VOTED PURELY WITH SQL
+# ALSO MAYBE ANOTHER METHOD THAT DOESNT RELOAD PAGE 
+# +REMEMBERS WHERE USER WAS (SCROLLS DOWN TO CORRECT POST)
+@app.route("/upvote/<int:post_id>")
+def upvote(post_id):
+    session = utils.get_session(request, app.secret_key)
+    if not session["authorized"]:
+        return redirect(url_for("login"))
+    server.db_exec(server.cmds["update"]["upvote_post"], post_id)
+    return redirect(url_for("home"))
+
+@app.route("/downvote/<int:post_id>")
+def downvote(post_id):
+    session = utils.get_session(request, app.secret_key)
+    if not session["authorized"]:
+        return redirect(url_for("login"))
+    server.db_exec(server.cmds["update"]["downvote_post"], post_id)
+    return redirect(url_for("home"))
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html", message=error), 404
