@@ -1,19 +1,46 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/css/post.css">
+{% endblock head %}
 
 {% block body %}
-<div class="post">
-    <p class="title">{{ title }}</p>
-    {{ publisher }}
-    <div class="snippet">
-        <pre><code class="snippet-container ${lang}">
-{{ snippet }}
-        </code></pre>
-        <div class="description-outer">
-            <div class="description-inner">
-                {{ description }}
+{{ super() }}
+<div id="post-container">
+    <div class="post">
+        <div class="post-header">
+            <p class="post-title">{{ post["title"] }}</p>
+            <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>
+        </div>
+        <div class="snippet">
+            {% if post["programming_language"] != "auto" %}
+                <pre><code class="snippet-container language-{{ post['programming_language'] }}">
+            {% else %}
+                <pre><code class="snippet-container">
+            {% endif %}     
+{{ post["content"] }}
+            </code></pre>
+            <div class="description-outer">
+                <div class="description-inner">
+                    {{ post["description"] }}
+                </div>
+            </div>
+        </div>
+        <div class="post-footer">
+            <div>
+                <div class="voting-buttons-container">
+                    <a href="/upvote/{{ post['id'] }}"><i data-feather="arrow-up"></i></a>
+                    {{ post["votes"] }}
+                    <a href="/downvote/{{ post['id'] }}"><i data-feather="arrow-down"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="publication-date-container">
+                    <p>published on {{ post["pub_date"] }}</p>
+                </div>
             </div>
         </div>
     </div>
-    {{ pub_date }}
 </div>
 {% endblock body %}

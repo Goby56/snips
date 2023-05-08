@@ -128,9 +128,9 @@ server = Server(app.secret_key)
 @app.route("/")
 def home():
     session = utils.get_session(request, app.secret_key)
-    posts = server.db_exec(server.cmds["fetch"]["recent_posts"], 10)
-    formatted_posts = utils.format_posts(posts, server.db.models["post"]["columns"])
-    return render_template("home.html", **(session | {"posts": formatted_posts}))
+    result = server.db_exec(server.cmds["fetch"]["recent_posts"], 10)
+    posts = utils.format_posts(result, server.db.models["post"]["columns"])
+    return render_template("home.html", **(session | {"posts": posts}))
 
 @app.route("/share/", methods=["POST", "GET"])
 def share():
@@ -163,20 +163,15 @@ def post_comments(post_id, post_name=None):
             error = f"The post you're looking for does not exist."
         return render_template("404.html", message=error), 404
     
-    post_id, title, code, desc, prog_lang, publisher_id, votes, pub_date = result[0]
+    post = utils.format_posts(result, server.db.models["post"]["columns"])[0]
     
-    url_title = utils.str2url(title)
+    url_title = utils.str2url(post["title"])
     if post_name != url_title:
         return redirect(url_for("post_comments", 
-                                post_id=post_id, 
+                                post_id=post["id"], 
                                 post_name=url_title))
-    publisher = server.db_exec(server.cmds["fetch"]["user_name"], publisher_id)
-    if not publisher:
-        publisher = "User deleted"
-    return render_template("post.html", title=title, 
-                           snippet=code, description=desc, 
-                           prog_lang=prog_lang, publisher=publisher[0][0], 
-                           votes=votes, pub_date=pub_date)
+
+    return render_template("post.html", post=post)
     
 # TODO GENERALIZED FORM ROUTE (login & register is very similar)
 @app.route("/login/", methods=["POST", "GET"])

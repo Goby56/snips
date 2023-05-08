@@ -136,7 +136,16 @@ h4 {
     max-width: 90ch;
 }
 
-.title {
+.post-header {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.post-title {
+    font-size: 1.7rem;
+}
+
+.publisher-name {
     font-size: 1.5rem;
 }
 
@@ -194,12 +203,13 @@ h4 {
     overflow-y: auto;
     overflow-x: auto;
 }
-.post-info {
+
+.post-footer {
     width: 100%;
     justify-content: space-between;
 }
 
-.post-info div {
+.post-footer div {
     gap: 1vw;
 }
 

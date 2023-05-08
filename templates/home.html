@@ -12,8 +12,9 @@
     <h2>Feed</h2>
     {% for post in posts %}
         <div class="post">
-            <div class="post-title">
-                <p class="title">{{ post["title"] }}</p>
+            <div class="post-header">
+                <p class="post-title">{{ post["title"] }}</p>
+                <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>
             </div>
             <div class="snippet">
                 {% if post["programming_language"] != "auto" %}
@@ -29,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div class="post-info">
+            <div class="post-footer">
                 <div>
                     <div class="voting-buttons-container">
                         <a href="/upvote/{{ post['id'] }}"><i data-feather="arrow-up"></i></a>
@@ -41,9 +42,6 @@
                     </div>
                 </div>
                 <div>
-                    <div class="publisher-container">
-                        <p>from {{ id2username( post["publisher_id"] ) }}</p>
-                    </div>
                     <div class="publication-date-container">
                         <p>published on {{ post["pub_date"] }}</p>
                     </div>
@@ -54,11 +52,3 @@
 </div>
     
 {% endblock body %}
-
-{% block scripts %}
-{{ super() }}
-<script>
-    hljs.highlightAll();
-    feather.replace();
-</script>   
-{% endblock scripts %}

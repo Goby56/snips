@@ -1,0 +1,7 @@
+@import url("/static/css/styles.css");
+
+#post-container {
+    height: 100%;
+    flex-direction: column;
+    justify-content: start;
+}
