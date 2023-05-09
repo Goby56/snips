@@ -10,17 +10,19 @@
     <nav id="navbar">
         <div id="navbar-bg"></div>
         <div id="logo-section">
-            <img id=nav-logo src="/static/images/ahsoka-rebel.svg" alt="">
-            <h1 id="nav-title">&lt/SNIPS&gt</h1>
+            <a href="/" id="nav-logo" class="icon-anchor"></a>
+            <a href="/" id="nav-title">&lt/SNIPS&gt</a>
+            <!-- <img id=nav-logo src="/static/images/ahsoka-rebel.svg" alt="">
+            <h1 id="nav-title">&lt/SNIPS&gt</h1> -->
         </div>
         <div id="style-selection-section">
             <select id="styles-dropdown"></select>
         </div>
         <div id="nav-search-section">
-            <div id="nav-search">
-                <img id="nav-search-icon" src="/static/images/search.svg" alt="">
+            <div id="nav-search" class="hljs">
+                <i data-feather="search"></i>
                 <form action="" method="get" id="nav-search-form" class="occupy center">
-                    <input type="text" name="search-bar" id="nav-search-bar" placeholder="search...">
+                    <input type="text" name="search-bar" id="nav-search-bar" class="hljs" placeholder="search...">
                 </form>
             </div>
         </div>
@@ -30,6 +32,7 @@
         {% if authorized %}
             <div id="nav-auth-section">
                 <h1 id="auth-user-name">{{ user }}</h1>
+                <!-- <a href="/logout/">log out</a> -->
                 <button id="log-out-button" class="button2">log out</button>
             </div>
         {% elif not authorized %}
@@ -44,11 +47,7 @@
 {% endblock body %}
 
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
+    {{ super() }}
     <script src="/static/js/navbar.js"></script>
-    <script>
-        hljs.highlightAll();
-        feather.replace();
-    </script> 
+    
 {% endblock scripts %}

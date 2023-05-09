@@ -14,14 +14,18 @@ function setColorThemePreference(theme) {
 }
 
 function getColorThemePreference() {
-    return window.localStorage.getItem("colorTheme");
+    return window.localStorage.getItem("colorTheme")
 }
 
 const HLJS_STYLES = requestHLJSstyles().then(result => {
     let version = result.version;
-    let colorThemePreference = localStorage.getItem("colorTheme")
+    let colorTheme = getColorThemePreference()
+    if (!colorTheme) {
+        setColorThemePreference(result.styles[0])
+        colorTheme = result.styles[0]
+    } 
     result.styles.forEach((style) => {
-        let disabledAttr = colorThemePreference == style ? "" : "disabled"
+        let disabledAttr = colorTheme == style ? "" : "disabled"
         $("head").append(`
         <link rel="stylesheet" 
               href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/${version}/${style}" 
@@ -30,5 +34,3 @@ const HLJS_STYLES = requestHLJSstyles().then(result => {
     })
     return result.styles;
 })
-
-

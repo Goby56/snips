@@ -28,34 +28,15 @@ body {
     height: 100vh;
     box-sizing: border-box;
     margin: 0;
-    background-color: var(--black2);
+}
+
+a img {
+    height: 100%;
 }
 
 a {
-    color: var(--orange);
-}
-
-/* Nav title */
-h1 {
-    font-size: 2rem;
-    color: var(--black2);
-}
-
-/* Page header */
-h2 {
-    font-size: 3rem;
-    color: var(--white);
-    margin: 0;
-}
-
-/* Section header */
-h3 {
-    font-size: 2rem;
-}
-
-/* Subsection header */
-h4 {
-    font-size: 1rem;
+    display: block;
+    text-decoration: none;
 }
 
 ::placeholder {
@@ -94,24 +75,6 @@ h4 {
     transform: scale(0.98);
 }
 
-.button1 {
-    color: var(--black);
-    background-color: var(--white);
-    border: 1px solid var(--black);
-}
-
-.button2 {
-    color: var(--white);
-    background-color: var(--orange);
-    border: 1px solid var(--white);
-}
-
-.button3 {
-    color: var(--white);
-    background-color: var(--blue);
-    border: 1px solid var(--blue);
-}
-
 .input1, .input2 {
     font-size: 1rem;
     width: fit-content;
@@ -134,10 +97,14 @@ h4 {
     align-items: center;
     width: fit-content;
     max-width: 90ch;
+    background-color: var(--dark-transparent);
+    padding-left: 1vw;
+    padding-right: 1vw;
+    border-radius: 20px;
 }
 
 .post-header {
-    width: 100%;
+    gap: 2vw;
     justify-content: space-between;
 }
 

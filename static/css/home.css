@@ -4,4 +4,5 @@
     height: 100%;
     flex-direction: column;
     justify-content: start;
+    gap: 2vh;
 }

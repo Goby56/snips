@@ -2,21 +2,28 @@
 <html lang="en">
 <head>
     {% block title %}
-        <title>Snips login</title>
+        <title>Share code snippets</title>
     {% endblock title %}
-    
+    <link rel="icon" href="/static/images/ahsoka-rebel.svg" />
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/styles.css">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
     {% block head %}{% endblock head %}
 </head>
-<body>
+<body class="hljs">
     {% block body %}{% endblock body %}
 
-    {% block scripts %}{% endblock scripts %}
+    {% block scripts %}
+    <script src="/static/js/styling.js"></script>
+    <script>
+        hljs.highlightAll();
+        feather.replace();
+    </script> 
+    {% endblock scripts %}
 </body>
 </html>

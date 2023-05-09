@@ -17,15 +17,14 @@ body {
     width: 100vw;
     height: 75px;
     z-index: 2;
+    background-color: inherit;
 }
 
 #navbar-bg {
     height: 100%;
     z-index: -1;
     grid-area: 1 / 1 / 2 / 7;
-    background: repeating-linear-gradient(45deg, var(--white) 0%, 
-                    var(--white) 30%, var(--blue) 30%, 
-                    var(--blue) 70%, var(--white) 70%);
+    background-color: var(--dark-transparent);
     position: relative;
     top: 0;
     left: 0;
@@ -74,13 +73,22 @@ body {
 }
 
 #nav-logo {
-    height: 90%;
-    width: auto;
+    height: 70px;
+    width: 70px;
+    background-color: currentColor;
+    
+    mask: url("/static/images/ahsoka-rebel.svg") no-repeat;
+    -webkit-mask: url("/static/images/ahsoka-rebel.svg") no-repeat;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+}
+
+#nav-logo-img {
+    fill: wheat ;
 }
 
 #nav-title {
     font-size: min(2vw, 2rem);
-    color: var(--black2);
 }
 
 #styles-dropdown {
@@ -93,14 +101,15 @@ body {
     align-items: center;
     width: 100%;
     height: 50%;
-    background-color: var(--white);
+    /* background-color: var(--white); */
+    /* background-color: inherit; */
     border-radius: 20px;
 }
 
 #nav-search-bar {
     width: 100%;
     height: 90%;
-    background-color: var(--white);
+    /* background-color: inherit; */
     border: none;
 }
 
