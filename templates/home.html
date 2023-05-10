@@ -31,9 +31,9 @@
             <div class="post-footer">
                 <div class="post-footer-left">
                     <div class="voting-buttons-container">
-                        <a href="/upvote/{{ post['id'] }}"><i data-feather="arrow-up"></i></a>
+                        <a href="/upvote/{{ post['id'] }}/0"><i data-feather="arrow-up" class="{{ has_voted(user_id, 1, post['id']) }}"></i></a>
                         {{ post["votes"] }}
-                        <a href="/downvote/{{ post['id'] }}"><i data-feather="arrow-down"></i></a>
+                        <a href="/downvote/{{ post['id'] }}/0"><i data-feather="arrow-down" class="{{ has_voted(user_id, -1, post['id']) }}"></i></a>
                     </div>
                     <div class="comments-button-container">
                         <a href="/comments/{{ post['id'] }}"><i data-feather="message-square"></i> Comments</a>

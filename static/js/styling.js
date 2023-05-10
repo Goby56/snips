@@ -25,6 +25,7 @@ applyStyle(".icon-anchor", "hljs-keyword")
 $("h1").addClass("hljs-keyword")
 
 $(".publisher-name").addClass("hljs-number")
+applyStyle(".voted", "hljs-number")
 
 $(".button2").addClass("hljs-title function_")
 

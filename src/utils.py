@@ -1,12 +1,13 @@
 import datetime, string, random, urllib, json
 import jwt, bcrypt
 
-def generate_token(username: str, secret_key: str, invalid: bool = False):
+def generate_token(secret_key: str, invalid: bool = False, **kwargs):
     payload = {
-        "user": username,
+        # "username": username,
+        # "user_id": user_id,
         "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=15) * (-1)**invalid
     }
-    return jwt.encode(payload, secret_key)
+    return jwt.encode(payload | kwargs, secret_key)
 
 def validate_token(token: str, secret_key: str):
     try:

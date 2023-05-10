@@ -31,7 +31,7 @@
         </div>
         {% if authorized %}
             <div id="nav-auth-section">
-                <h1 id="auth-user-name">{{ user }}</h1>
+                <h1 id="auth-user-name">{{ username }}</h1>
                 <!-- <a href="/logout/">log out</a> -->
                 <form action="{{ url_for('logout') }}" method="post">
                     <button class="button2">log out</button>

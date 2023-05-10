@@ -35,7 +35,7 @@
             "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)"
         }
     },
-    "post_comment": {
+    "comment": {
         "columns": {
             "content": "%s text",
             "post_id": "%s int",
@@ -47,18 +47,20 @@
         "constraints": {
             "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)",
             "publisher_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
-            "parent_id post_comments": "FOREIGN KEY (%s) REFERENCES %s(id)"
+            "parent_id comment": "FOREIGN KEY (%s) REFERENCES %s(id)"
         }
     },
     "comment_votes": {
         "columns": {
             "value": "%s int",
             "voter_id": "%s int",
-            "post_id": "%s int"
+            "post_id": "%s int",
+            "comment_id": "%s int"
         },
         "constraints": {
             "voter_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
-            "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)"
+            "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)",
+            "comment_id comment": "FOREIGN KEY (%s) REFERENCES %s(id)"
         }
     }
 }

@@ -62,6 +62,10 @@ a {
     display: none !important;
 }
 
+.voted {
+    stroke-width: 4;
+}
+
 .button1, .button2, .button3 {
     font-size: 1rem;
     width: fit-content;

@@ -74,6 +74,7 @@ class Server:
         return self.db.cursor.fetchall()
 
     def authenticate(self, username: str, password: str):
+        # TODO FIX USERNAME ENTANGLEMENT (messy variable names)
         if not username or not password:
             return AUTH_RESP["INSUFFICENT_DETAILS"]
         
@@ -87,7 +88,8 @@ class Server:
         
         self.db_exec(self.cmds["update"]["user_last_login"], 
                      username.lower(), commit=True)
-        token = utils.generate_token(displayname, self.secret_key)
+        token = utils.generate_token(self.secret_key, username=displayname, 
+                                     user_id=self.get_user(username=username))
         return AUTH_RESP["LOGIN_SUCCESSFUL"] | {"token": token}
         
     def register(self, username: str, password: str, passverify: str):
@@ -105,14 +107,14 @@ class Server:
         self.db_exec(self.cmds["create"]["user"], 
                               username.lower(), username, hashed_pass, 
                               commit=True)
-        token = utils.generate_token(username, self.secret_key)
+        token = utils.generate_token(self.secret_key, username=username, 
+                                     user_id=self.get_user(username=username))
         return AUTH_RESP["ACCOUNT_CREATED"] | {"token": token}
     
-    def add_post(self, title: str, content: str, description: str, language: str, publisher_name: str):
+    def add_post(self, title: str, content: str, description: str, language: str, publisher_id: int):
         if not content:
             return POST_RESP["CODE_NOT_PROVIDED"]
-        publisher_id = self.db_exec(self.cmds["fetch"]["user_id"], 
-                                    publisher_name.lower())[0][0]
+        
         if not title:
             title = "Naming variables is not my thing"
 
@@ -133,9 +135,72 @@ class Server:
         
         return COMMENT_RESP["COMMENT_CREATED"]
     
-    def get_user(self, user_id: int):
-        user = self.db_exec(self.cmds["fetch"]["user_name"], user_id)
-        return user[0][0] if user else "User deleted"
+    def add_vote(self, new_value: int, voter_id: int, post_id: int, comment_id: int):
+        if comment_id == 0:
+            old_value = self.db_exec(self.cmds["fetch"]["vote_on_post"],
+                                    voter_id, post_id)
+            increment = new_value
+
+            if old_value:
+                old_value = old_value[0][0]
+                self.db_exec(self.cmds["delete"]["post_vote"], 
+                            voter_id, post_id, commit=True)
+                if old_value != new_value:
+                    increment += new_value
+                elif old_value == new_value:
+                    increment = -new_value
+
+            # Create new vote record if first vote or switch
+            if old_value != new_value:
+                self.db_exec(self.cmds["create"]["post_vote"], new_value,
+                            voter_id, post_id, commit=True)
+
+            # Update vote value on post
+            self.db_exec(self.cmds["update"]["post_votes_value"], 
+                         increment, post_id, commit=True)
+        else:
+            old_value = self.db_exec(self.cmds["fetch"]["vote_on_comment"],
+                                    voter_id, post_id, comment_id)
+            increment = new_value
+
+            if old_value:
+                old_value = old_value[0][0]
+                self.db_exec(self.cmds["delete"]["comment_vote"], 
+                            voter_id, post_id, commit=True)
+                if old_value != new_value:
+                    increment += new_value
+                elif old_value == new_value:
+                    increment = -new_value
+
+            # Create new vote record if first vote or switch
+            if old_value != new_value:
+                self.db_exec(self.cmds["create"]["comment_vote"], new_value,
+                            voter_id, post_id, commit=True)
+
+            # Update vote value on comment
+            self.db_exec(self.cmds["update"]["comment_votes_value"], 
+                         increment, post_id, commit=True)
+    
+    def get_user(self, user_id: int = None, username: str = None):
+        if user_id:
+            user = self.db_exec(self.cmds["fetch"]["user_name"], user_id)
+            return user[0][0] if user else "User deleted"
+        elif username:
+            user = self.db_exec(self.cmds["fetch"]["user_id"], username)
+            return user[0][0] if user else None
+        
+    def has_voted(self, user_id: int, test_value: int, post_id: int, comment_id: int = 0):
+        if not user_id:
+            return ""
+        if comment_id == 0:
+            value = self.db_exec(self.cmds["fetch"]["vote_on_post"], 
+                                 user_id, post_id)
+        else:
+            value = self.db_exec(self.cmds["fetch"]["vote_on_comment"], 
+                                 user_id, post_id, comment_id)
+        if not value:
+            return ""
+        return "voted" if test_value == value[0][0] else ""
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "thoy"
@@ -161,7 +226,7 @@ def share():
                                request.form["snippet"],
                                request.form["description"],
                                request.form["language"],
-                               session["user"])
+                               session["user_id"])
         if resp["post_created"]:
             return redirect(url_for("post", 
                                     post_id=resp["post_id"], 
@@ -193,7 +258,7 @@ def post(post_id, post_name=None):
                                 post_name=url_title))
 
     result = server.db_exec(server.cmds["fetch"]["post_comments"], post_id, 10)
-    comments = utils.sql_result_to_dict(result, server.db.models["post_comment"]["columns"])
+    comments = utils.sql_result_to_dict(result, server.db.models["comment"]["columns"])
 
     return render_template("post.html", post=post, comments=comments, **session)
 
@@ -205,8 +270,22 @@ def comment(post_id, comment_id):
                                 redirect_to="post", 
                                 redirect_args={"post_id": post_id}))
     resp = server.add_comment(request.form["comment"], 
-                                session["user"],
+                                session["user_id"],
                                 post_id, comment_id)
+    return redirect(url_for("post", post_id=post_id))
+
+# TODO MAYBE AUTO CHECK IF USER HAS ALREADY VOTED PURELY WITH SQL
+# +REMEMBERS WHERE USER WAS (SCROLLS DOWN TO CORRECT POST/COMMENT)
+@app.route("/upvote/<int:post_id>/<int:comment_id>")
+@app.route("/downvote/<int:post_id>/<int:comment_id>")
+def vote(post_id, comment_id):
+    session = utils.get_session(request, app.secret_key)
+    if not session["authorized"]:
+        return redirect(url_for("login"))
+    increment = 1 if "upvote" in request.path else -1
+    resp = server.add_vote(increment, session["user_id"],
+                           post_id, comment_id)
+    # TODO DO NOT REDIRECT TO POST IF ON HOME PAGE
     return redirect(url_for("post", post_id=post_id))
     
 # TODO GENERALIZED FORM ROUTE (login & register is very similar)
@@ -243,29 +322,8 @@ def register():
 @app.route("/logout/", methods=["POST"])
 def logout():
     response = make_response(redirect(url_for("home")))
-    response.set_cookie("token", utils.generate_token("", app.secret_key, True))
+    response.set_cookie("token", utils.generate_token(app.secret_key, invalid=True))
     return response
-
-
-# TODO ONE VOTING ROUTE (OR GENERALIZED) AND AUTO CHECK IF USER HAS ALREADY
-# VOTED PURELY WITH SQL
-# ALSO MAYBE ANOTHER METHOD THAT DOESNT RELOAD PAGE 
-# +REMEMBERS WHERE USER WAS (SCROLLS DOWN TO CORRECT POST)
-@app.route("/upvote/<int:post_id>")
-def upvote(post_id):
-    session = utils.get_session(request, app.secret_key)
-    if not session["authorized"]:
-        return redirect(url_for("login"))
-    server.db_exec(server.cmds["update"]["upvote_post"], post_id)
-    return redirect(url_for("home"))
-
-@app.route("/downvote/<int:post_id>")
-def downvote(post_id):
-    session = utils.get_session(request, app.secret_key)
-    if not session["authorized"]:
-        return redirect(url_for("login"))
-    server.db_exec(server.cmds["update"]["downvote_post"], post_id)
-    return redirect(url_for("home"))
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -278,7 +336,8 @@ def page_not_found(error):
 @app.context_processor
 def example():
     return {
-        "id2username": server.get_user
+        "id2username": server.get_user,
+        "has_voted": server.has_voted
     }
 
 
