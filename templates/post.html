@@ -44,11 +44,11 @@
             </div>
         </div>
     </div>
-    <div id="comments">
+    <div id="comments" class="container">
         {% if authorized %}
-            <div class="comment-box container">
-                <form action="/commments/{{ post['id'] }}">
-                    <textarea name="comment" class="comment-textarea" cols="30" rows="10"></textarea>
+            <div class="comment-box">
+                <form action="{{ url_for('comment', post_id=post['id'], comment_id=0)}}" method="post">
+                    <textarea name="comment" class="comment-textarea" rows="5"></textarea>
                     <div class="comment-box-footer">
                         <p>Commenting as {{ user }}</p>
                         <input type="submit" value="Comment">
@@ -58,6 +58,9 @@
         {% elif not authorized %}
             <p>You need to be logged in to comment</p>
         {% endif %}
+        {% for comment in comments %}
+            <p>{{ comment["content"] }}</p>
+        {% endfor %}
     </div>
 </div>
 {% endblock body %}

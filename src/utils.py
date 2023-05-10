@@ -38,5 +38,5 @@ def generate_post_suffix():
 def str2url(text: str):
     return urllib.parse.quote(text.strip().replace(" ", "-"))
 
-def format_posts(posts: list, columns: dict):
-    return [{k: p[i] for i, k in enumerate(["id"] + list(columns.keys()))} for p in posts]
+def sql_result_to_dict(result: list, columns: dict):
+    return [{k: p[i] for i, k in enumerate(["id"] + list(columns.keys()))} for p in result]

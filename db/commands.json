@@ -5,11 +5,13 @@
         "user_name": "SELECT displayname FROM user WHERE id=?",
         "post": "SELECT * FROM post WHERE id=?",
         "highest_voted_posts": "SELECT * FROM post ORDER BY votes DESC LIMIT ?",
-        "recent_posts": "SELECT * FROM post ORDER BY pub_date DESC LIMIT ?" 
+        "recent_posts": "SELECT * FROM post ORDER BY pub_date DESC LIMIT ?",
+        "post_comments": "SELECT * FROM post_comment WHERE post_id=? ORDER BY pub_date DESC LIMIT ?" 
     },
     "create": {
         "user": "INSERT INTO user (username, displayname, password) VALUES (?, ?, ?)",
-        "post": "INSERT INTO post (title, content, description, programming_language, publisher_id) VALUES (?, ?, ?, ?, ?)"
+        "post": "INSERT INTO post (title, content, description, programming_language, publisher_id) VALUES (?, ?, ?, ?, ?)",
+        "comment": "INSERT INTO post_comment (content, publisher_id, post_id, parent_id) VALUES (?, ?, ?, ?)"
     },
     "update": {
         "user_last_login": "UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE username = ?",

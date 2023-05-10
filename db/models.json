@@ -34,5 +34,31 @@
             "voter_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
             "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)"
         }
+    },
+    "post_comment": {
+        "columns": {
+            "content": "%s text",
+            "post_id": "%s int",
+            "publisher_id": "%s int",
+            "parent_id": "%s int",
+            "pub_date": "%s timestamp DEFAULT CURRENT_TIMESTAMP",
+            "votes": "%s int DEFAULT 0"
+        },
+        "constraints": {
+            "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)",
+            "publisher_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
+            "parent_id post_comments": "FOREIGN KEY (%s) REFERENCES %s(id)"
+        }
+    },
+    "comment_votes": {
+        "columns": {
+            "value": "%s int",
+            "voter_id": "%s int",
+            "post_id": "%s int"
+        },
+        "constraints": {
+            "voter_id user": "FOREIGN KEY (%s) REFERENCES %s(id)",
+            "post_id post": "FOREIGN KEY (%s) REFERENCES %s(id)"
+        }
     }
 }

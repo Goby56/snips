@@ -1,10 +1,7 @@
-from ctypes import util
-from email import message
-from urllib import response
 from flask import Flask, redirect, render_template, \
     request, url_for, make_response
 from src import database, utils
-import json, urllib.parse
+import json
 
 # Authorization respone
 AUTH_RESP = {
@@ -46,6 +43,17 @@ POST_RESP = {
     "POST_CREATED": {
         "post_created": True, "code": 201,
         "response_message": "Your post was successfully created"
+    }
+}
+
+COMMENT_RESP = {
+    "COMMENT_NOT_PROVIED": {
+        "comment_created": False, "code": 400,
+        "response_message": "You need to comment something!"
+    },
+    "COMMENT_CREATED": {
+        "comment_created": True, "code": 201,
+        "response_message": "Your comment was successfully created"
     }
 }
 
@@ -115,6 +123,16 @@ class Server:
         post_id = self.db_exec("SELECT LAST_INSERT_ID()")[0][0]
         return POST_RESP["POST_CREATED"] | {"post_id": post_id, "post_name": url_path}
     
+    def add_comment(self, content: str, publisher_id: int, post_id: int, parent_id: int):
+        if not content:
+            return COMMENT_RESP["COMMENT_NOT_PROVIED"]
+        
+        self.db_exec(self.cmds["create"]["comment"], 
+                     content, publisher_id, 
+                     post_id, parent_id, commit=True)
+        
+        return COMMENT_RESP["COMMENT_CREATED"]
+    
     def get_user(self, user_id: int):
         user = self.db_exec(self.cmds["fetch"]["user_name"], user_id)
         return user[0][0] if user else "User deleted"
@@ -129,7 +147,7 @@ server = Server(app.secret_key)
 def home():
     session = utils.get_session(request, app.secret_key)
     result = server.db_exec(server.cmds["fetch"]["recent_posts"], 10)
-    posts = utils.format_posts(result, server.db.models["post"]["columns"])
+    posts = utils.sql_result_to_dict(result, server.db.models["post"]["columns"])
     return render_template("home.html", **(session | {"posts": posts}))
 
 @app.route("/share/", methods=["POST", "GET"])
@@ -145,7 +163,7 @@ def share():
                                request.form["language"],
                                session["user"])
         if resp["post_created"]:
-            return redirect(url_for("post_comments", 
+            return redirect(url_for("post", 
                                     post_id=resp["post_id"], 
                                     post_name=resp["post_name"]))
         return render_template("submit.html", **resp), resp["code"]
@@ -153,8 +171,10 @@ def share():
 
 @app.route("/comments/<int:post_id>", methods=["POST", "GET"])
 @app.route("/comments/<int:post_id>/<post_name>", methods=["POST", "GET"])
-def post_comments(post_id, post_name=None):
+def post(post_id, post_name=None):
     session = utils.get_session(request, app.secret_key)
+
+    # Handle 404
     result = server.db_exec(server.cmds["fetch"]["post"], post_id)
     if not result:
         if post_name:
@@ -164,26 +184,42 @@ def post_comments(post_id, post_name=None):
             error = f"The post you're looking for does not exist."
         return render_template("404.html", message=error), 404
     
-    post = utils.format_posts(result, server.db.models["post"]["columns"])[0]
+    post = utils.sql_result_to_dict(result, server.db.models["post"]["columns"])[0]
     
     url_title = utils.str2url(post["title"])
     if post_name != url_title:
-        return redirect(url_for("post_comments", 
+        return redirect(url_for("post", 
                                 post_id=post["id"], 
                                 post_name=url_title))
 
-    return render_template("post.html", post=post, **session)
+    result = server.db_exec(server.cmds["fetch"]["post_comments"], post_id, 10)
+    comments = utils.sql_result_to_dict(result, server.db.models["post_comment"]["columns"])
+
+    return render_template("post.html", post=post, comments=comments, **session)
+
+@app.route("/comment/<int:post_id>/<int:comment_id>", methods=["POST"])
+def comment(post_id, comment_id):
+    session = utils.get_session(request, app.secret_key)
+    if not session["authorized"]:
+        return redirect(url_for("login", 
+                                redirect_to="post", 
+                                redirect_args={"post_id": post_id}))
+    resp = server.add_comment(request.form["comment"], 
+                                session["user"],
+                                post_id, comment_id)
+    return redirect(url_for("post", post_id=post_id))
     
 # TODO GENERALIZED FORM ROUTE (login & register is very similar)
 @app.route("/login/", methods=["POST", "GET"])
 def login():
     session = utils.get_session(request, app.secret_key)
     endpoint = request.args.get("redirect_to", "home")
+    endpoint_args = request.args.get("redirect_args", {})
     if request.method == "POST":
         resp = server.authenticate(request.form["username"], 
                                    request.form["password"])
         if resp["authorized"]:
-            response = make_response(redirect(url_for(endpoint)))
+            response = make_response(redirect(url_for(endpoint, *endpoint_args)))
             response.set_cookie("token", resp["token"])
             return response
 
@@ -204,7 +240,7 @@ def register():
 
     return render_template("register.html")
 
-@app.route("/logout/")
+@app.route("/logout/", methods=["POST"])
 def logout():
     response = make_response(redirect(url_for("home")))
     response.set_cookie("token", utils.generate_token("", app.secret_key, True))
