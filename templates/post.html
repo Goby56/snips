@@ -11,7 +11,6 @@
     <div class="post">
         <div class="post-header">
             <p class="post-title">{{ post["title"] }}</p>
-            <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>
         </div>
         <div class="snippet">
             {% if post["programming_language"] != "auto" %}
@@ -28,19 +27,37 @@
             </div>
         </div>
         <div class="post-footer">
-            <div>
+            <div class="post-footer-left">
                 <div class="voting-buttons-container">
                     <a href="/upvote/{{ post['id'] }}"><i data-feather="arrow-up"></i></a>
                     {{ post["votes"] }}
                     <a href="/downvote/{{ post['id'] }}"><i data-feather="arrow-down"></i></a>
                 </div>
             </div>
-            <div>
+            <div class="post-footer-center">
+                <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>
+            </div>
+            <div class="post-footer-right">
                 <div class="publication-date-container">
                     <p>published on {{ post["pub_date"] }}</p>
                 </div>
             </div>
         </div>
+    </div>
+    <div id="comments">
+        {% if authorized %}
+            <div class="comment-box container">
+                <form action="/commments/{{ post['id'] }}">
+                    <textarea name="comment" class="comment-textarea" cols="30" rows="10"></textarea>
+                    <div class="comment-box-footer">
+                        <p>Commenting as {{ user }}</p>
+                        <input type="submit" value="Comment">
+                    </div>
+                </form>
+            </div> 
+        {% elif not authorized %}
+            <p>You need to be logged in to comment</p>
+        {% endif %}
     </div>
 </div>
 {% endblock body %}

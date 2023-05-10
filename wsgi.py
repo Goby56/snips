@@ -154,6 +154,7 @@ def share():
 @app.route("/comments/<int:post_id>", methods=["POST", "GET"])
 @app.route("/comments/<int:post_id>/<post_name>", methods=["POST", "GET"])
 def post_comments(post_id, post_name=None):
+    session = utils.get_session(request, app.secret_key)
     result = server.db_exec(server.cmds["fetch"]["post"], post_id)
     if not result:
         if post_name:
@@ -171,7 +172,7 @@ def post_comments(post_id, post_name=None):
                                 post_id=post["id"], 
                                 post_name=url_title))
 
-    return render_template("post.html", post=post)
+    return render_template("post.html", post=post, **session)
     
 # TODO GENERALIZED FORM ROUTE (login & register is very similar)
 @app.route("/login/", methods=["POST", "GET"])

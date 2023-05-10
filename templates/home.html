@@ -9,12 +9,10 @@
 {{ super() }}
 
 <div id="feed">
-    <h2>Feed</h2>
     {% for post in posts %}
         <div class="post">
             <div class="post-header">
                 <p class="post-title">{{ post["title"] }}</p>
-                <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>
             </div>
             <div class="snippet">
                 {% if post["programming_language"] != "auto" %}
@@ -31,7 +29,7 @@
                 </div>
             </div>
             <div class="post-footer">
-                <div>
+                <div class="post-footer-left">
                     <div class="voting-buttons-container">
                         <a href="/upvote/{{ post['id'] }}"><i data-feather="arrow-up"></i></a>
                         {{ post["votes"] }}
@@ -41,7 +39,10 @@
                         <a href="/comments/{{ post['id'] }}"><i data-feather="message-square"></i> Comments</a>
                     </div>
                 </div>
-                <div>
+                <div class="post-footer-center">
+                    <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>
+                </div>
+                <div class="post-footer-right">
                     <div class="publication-date-container">
                         <p>published on {{ post["pub_date"] }}</p>
                     </div>

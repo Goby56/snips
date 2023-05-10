@@ -14,6 +14,7 @@ $("head").addClass("hljs")
 $("button").addClass("hljs")
 $("select").addClass("hljs")
 $("input").addClass("hljs")
+$("textarea").addClass("hljs")
 
 
 $("a").addClass("hljs-title function_")
@@ -22,6 +23,8 @@ $("[data-feather]").addClass("hljs-keyword")
 applyStyle(".icon-anchor", "hljs-keyword")
 // $(".icon-anchor").addClass("hljs-keyword")
 $("h1").addClass("hljs-keyword")
+
+$(".publisher-name").addClass("hljs-number")
 
 $(".button2").addClass("hljs-title function_")
 
