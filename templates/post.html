@@ -59,7 +59,20 @@
             <p>You need to be logged in to comment</p>
         {% endif %}
         {% for comment in comments %}
-            <p>{{ comment["content"] }}</p>
+            <div class="comment">
+                <div class="comment-content">
+                    <p class="publisher-name">{{ id2username( comment["publisher_id"] ) }}</p>
+                    <p>{{ comment["content"] }}</p>
+                </div>
+                <div class="comment-footer">
+                    <div>
+                        <a href="/upvote/{{ post['id'] }}/{{ comment['id'] }}"><i data-feather="arrow-up" class="{{ has_voted(user_id, 1, post['id'], comment['id']) }}"></i></a>
+                        {{ comment["votes"] }}
+                        <a href="/downvote/{{ post['id'] }}/{{ comment['id'] }}"><i data-feather="arrow-down" class="{{ has_voted(user_id, -1, post['id'], comment['id']) }}"></i></a>
+                    </div>
+                    <p>sent {{ comment["pub_date"] }}</p>
+                </div>
+            </div>
         {% endfor %}
     </div>
 </div>

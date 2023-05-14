@@ -36,12 +36,14 @@ class Database:
             if table_name in existing_tables:
                 self.validate_table(table_name)
             else:
-                self.create_table(table_name, model["columns"])
+                self.create_table(table_name, model["columns"], model["constraints"])
 
-    def create_table(self, name: str, columns: dict):
+    def create_table(self, name: str, columns: dict, constraints: dict):
         sql_columns = ["id int NOT NULL PRIMARY KEY AUTO_INCREMENT"]
         for col_name, sql_cmd in columns.items():
             sql_columns.append(sql_cmd % tuple(col_name.split(" ")))
+        for values, sql_cmd in constraints.items():
+            sql_columns.append(sql_cmd % tuple(values.split(" ")))
         self.cursor.execute(f"CREATE TABLE {name} ({', '.join(sql_columns)})")
 
     def validate_table(self, name: str):

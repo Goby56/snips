@@ -8,7 +8,7 @@
         "recent_posts": "SELECT * FROM post ORDER BY pub_date DESC LIMIT ?",
         "post_comments": "SELECT * FROM comment WHERE post_id=? ORDER BY pub_date DESC LIMIT ?",
         "vote_on_post": "SELECT value FROM post_votes WHERE voter_id=? AND post_id=?",
-        "vote_on_comment": "SELECT value FROM commet_votes WHERE voter_id=? AND post_id=? AND comment_id=?"
+        "vote_on_comment": "SELECT value FROM comment_votes WHERE voter_id=? AND post_id=? AND comment_id=?"
     },
     "create": {
         "user": "INSERT INTO user (username, displayname, password) VALUES (?, ?, ?)",

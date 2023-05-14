@@ -166,7 +166,7 @@ class Server:
             if old_value:
                 old_value = old_value[0][0]
                 self.db_exec(self.cmds["delete"]["comment_vote"], 
-                            voter_id, post_id, commit=True)
+                            voter_id, post_id, comment_id, commit=True)
                 if old_value != new_value:
                     increment += new_value
                 elif old_value == new_value:
@@ -175,13 +175,28 @@ class Server:
             # Create new vote record if first vote or switch
             if old_value != new_value:
                 self.db_exec(self.cmds["create"]["comment_vote"], new_value,
-                            voter_id, post_id, commit=True)
+                            voter_id, post_id, comment_id,commit=True)
 
             # Update vote value on comment
             self.db_exec(self.cmds["update"]["comment_votes_value"], 
-                         increment, post_id, commit=True)
+                         increment, post_id, comment_id, commit=True)
     
     def get_user(self, user_id: int = None, username: str = None):
+        """
+        ### Description
+
+        Get either the user's id (column id in database) or their username
+        using the respective values
+
+        ### Use
+
+        Generally used for template rendering:
+        
+        <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>\n
+                                                            ^^^^^^^^^^^^^^^^
+        In the example above 'id2username' is the relevant method as it has
+        been renamed by the 'context_processor'.
+        """
         if user_id:
             user = self.db_exec(self.cmds["fetch"]["user_name"], user_id)
             return user[0][0] if user else "User deleted"
@@ -190,6 +205,17 @@ class Server:
             return user[0][0] if user else None
         
     def has_voted(self, user_id: int, test_value: int, post_id: int, comment_id: int = 0):
+        """
+        ### Description
+        Used in templates to retrieve the css styling class 'voted'. This value
+        will be provied if the user has pressed the appropriate voting button.
+
+        ### Use
+        Should only be used to style voting buttons if they have been clicked on.
+        
+        <i data-feather="arrow-up" class="{{ has_voted(user_id, 1, post['id']) }}"></i>\n
+                                                                      ^^^^^^^^^^^^^^^^^
+        """
         if not user_id:
             return ""
         if comment_id == 0:
@@ -279,6 +305,7 @@ def comment(post_id, comment_id):
 @app.route("/upvote/<int:post_id>/<int:comment_id>")
 @app.route("/downvote/<int:post_id>/<int:comment_id>")
 def vote(post_id, comment_id):
+    print(comment_id)
     session = utils.get_session(request, app.secret_key)
     if not session["authorized"]:
         return redirect(url_for("login"))
@@ -334,7 +361,7 @@ def page_not_found(error):
 #     return render_template("<p>You are on %s's profile</p>" % username)
 
 @app.context_processor
-def example():
+def template_context():
     return {
         "id2username": server.get_user,
         "has_voted": server.has_voted

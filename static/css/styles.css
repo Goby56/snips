@@ -263,6 +263,22 @@ a {
     width: 100%;
 }
 
+.comment {
+    width: 100%;
+    flex-direction: column;
+}
+
+.comment-content {
+    width: 100%;
+    gap: 1vw;
+    justify-content: flex-start;
+}
+
+.comment-footer {
+    width: 100%;
+    justify-content: space-between;
+}
+
 ::-webkit-scrollbar-track
 {
   border-radius: 7px;
