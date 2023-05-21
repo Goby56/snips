@@ -398,8 +398,8 @@ def share():
         return render_template("submit.html", **resp), resp["code"]
     return render_template("submit.html", **session)
 
-@app.route("/comments/<int:post_id>", methods=["POST", "GET"])
-@app.route("/comments/<int:post_id>/<post_name>", methods=["POST", "GET"])
+@app.route("/comments/<int:post_id>")
+@app.route("/comments/<int:post_id>/<post_name>")
 def post(post_id, post_name=None):
     session = utils.get_session(request, app.secret_key)
 
