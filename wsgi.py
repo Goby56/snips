@@ -58,6 +58,19 @@ COMMENT_RESP = {
 }
 
 class Server:
+    """
+    ### Description
+    The `Server` class handles common interactions with the wsgi (Web Server Gateway Interface)
+    such as authentication, publishing and voting. These interactions are pre-defined in the
+    `commands.json` file and are exposed with the `cmds` variable
+
+    ### Use
+    Provide the secret key that is associated with the flask app. 
+    This key will be used to create JWT (Json Web Tokens) which
+    is then given to a authenticated user to authenticate them
+    in the future.
+
+    """
     def __init__(self, secret_key) -> None:
         self.db = database.Database("snips")
         self.secret_key = secret_key
@@ -65,6 +78,33 @@ class Server:
             self.cmds = json.load(f)
 
     def db_exec(self, sql_cmd: str, *args, commit = False):
+        """
+        ### Description
+
+        Makes the execution of SQL commands to the database easier.
+
+        `:param sql_cmd:` The SQL command as a string
+
+        `:param *args:` Values that should be inserted into the command
+
+        `:param commit:` Wheter or not to commit the changes made to the database
+
+        ### Use
+
+        ##### Examples:
+
+        Fetch user authentication details:
+        ```
+        result = self.db_exec(self.cmds["fetch"]["user_auth"], username.lower())
+        ```
+
+        Update last login of user:
+        ```
+        self.db_exec(self.cmds["update"]["user_last_login"], 
+                     username.lower(), commit=True)
+        ```
+        Here commit has to be true in order to make sure the changes are saved
+        """
         if len(args) < 1:
             self.db.cursor.execute(sql_cmd)
         else:
@@ -74,7 +114,19 @@ class Server:
         return self.db.cursor.fetchall()
 
     def authenticate(self, username: str, password: str):
-        # TODO FIX USERNAME ENTANGLEMENT (messy variable names)
+        """
+        ### Description
+
+        Logs in the user if:
+        1. A username and password has been provided
+        2. The user exists
+        3. The password provided match the hash found in the database
+
+        Updates the last login timestamp in the database.
+
+        Returns a JWT (Json Web Token) for authentication as specified in these 
+        functions :func:`utils.generate_token`, :func:`utils.validate_token`
+        """
         if not username or not password:
             return AUTH_RESP["INSUFFICENT_DETAILS"]
         
@@ -93,6 +145,21 @@ class Server:
         return AUTH_RESP["LOGIN_SUCCESSFUL"] | {"token": token}
         
     def register(self, username: str, password: str, passverify: str):
+        """
+        ### Description
+
+        Creates a user in the database if:
+        1. A username and password has been provided
+        2. The passwords provided match
+        3. The username has not been taken
+        
+        Only a hashed version of the password gets stored in the database.
+        The hashing algorithm is bcrypt and is done in :func:`utils.hash_password`
+
+        Returns a JWT (Json Web Token) for authentication as specified in these 
+        functions :func:`utils.generate_token`, :func:`utils.validate_token`
+        """
+
         if not username or not password:
             return AUTH_RESP["INSUFFICENT_DETAILS"]
         
@@ -112,6 +179,22 @@ class Server:
         return AUTH_RESP["ACCOUNT_CREATED"] | {"token": token}
     
     def add_post(self, title: str, content: str, description: str, language: str, publisher_id: int):
+        """
+        ### Description
+
+        Adds a post to the database where atleast the content of the
+        post has to be provided.
+
+        `:param title:` Can be left empty, will resort to default title
+
+        `:param content:` Must be provided, should be some kind of code snippet
+
+        `:param description:` Not really in use nor fully supported as of yet
+
+        `:param language:` Can be any of the supported HLJS languages, auto for auto detection
+
+        `:param publisher_id:` user_id of the publisher
+        """
         if not content:
             return POST_RESP["CODE_NOT_PROVIDED"]
         
@@ -126,6 +209,31 @@ class Server:
         return POST_RESP["POST_CREATED"] | {"post_id": post_id, "post_name": url_path}
     
     def add_comment(self, content: str, publisher_id: int, post_id: int, parent_id: int):
+        """
+        ### Description
+
+        Used for adding comments on both posts and comments (nested comments). Nested comments
+        is possible and has been implemented in the database but for the moment there is no
+        way to comment on a comment on the website.
+
+        `:param content:` The body of text that should be added
+
+        `:param publisher_id:` user_id of the commenter
+
+        `:param post_id:` The id of the post that the comment should be placed on
+
+        `:param parent_id:` Location of where this comment should be placed. 
+        A value of 0 refers to a top level comment on the post, every other 
+        positive integer refers to a specific comment on that post.
+
+        ### Use
+
+        As of now, only top level comments are supported.
+        ```
+        add_comment('Nice code!', user_id, 4, 0)
+        ```
+        This adds a top level comment on post with id 4
+        """
         if not content:
             return COMMENT_RESP["COMMENT_NOT_PROVIED"]
         
@@ -136,6 +244,33 @@ class Server:
         return COMMENT_RESP["COMMENT_CREATED"]
     
     def add_vote(self, new_value: int, voter_id: int, post_id: int, comment_id: int):
+        """
+        ### Description
+
+        This method provides a way to up- and downvote both posts and comments.
+
+        `:param new_value:` +1 for upvotes, -1 for downvotes
+
+        `:param voter_id:` user_id of the one who is voting
+
+        `:param post_id:` id of the post that the vote concerns 
+        (even this has to be provided to vote on a comment as 
+        every comment is associated with a post)
+
+        `:param comment_id:` 0 to vote on post itself and any positive integer refers to the comment
+
+        ### Use
+
+        To upvote on post with post_id=3:
+        ```
+        add_vote(1, user_id, 3, 0)
+        ```
+
+        To downvote comment with comment_id=2 on post with post_id=6:
+        ```
+        add_vote(-1, user_id, 6, 2)
+        ```
+        """
         if comment_id == 0:
             old_value = self.db_exec(self.cmds["fetch"]["vote_on_post"],
                                     voter_id, post_id)
@@ -191,11 +326,12 @@ class Server:
         ### Use
 
         Generally used for template rendering:
-        
+        ```html
         <p class="publisher-name">{{ id2username( post["publisher_id"] ) }}</p>\n
-                                                            ^^^^^^^^^^^^^^^^
-        In the example above 'id2username' is the relevant method as it has
-        been renamed by the 'context_processor'.
+                                                  ^^^^^^^^^^^^^^^^^^^^
+        ```
+        In the example above the method has been renamed to `id2username` 
+        by the :func:`context_processor`.
         """
         if user_id:
             user = self.db_exec(self.cmds["fetch"]["user_name"], user_id)
@@ -212,9 +348,10 @@ class Server:
 
         ### Use
         Should only be used to style voting buttons if they have been clicked on.
-        
-        <i data-feather="arrow-up" class="{{ has_voted(user_id, 1, post['id']) }}"></i>\n
-                                                                      ^^^^^^^^^^^^^^^^^
+        ```html
+        <i data-feather="arrow-up" class="{{ has_voted(user_id, 1, post['id']) }}"></i>
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        ```
         """
         if not user_id:
             return ""
@@ -245,7 +382,8 @@ def home():
 def share():
     session = utils.get_session(request, app.secret_key)
     if not session["authorized"]:
-        # Redirect to share when logged in
+        # Redirect to login and when logged in 
+        # redirect again to share
         return redirect(url_for("login", redirect_to="share"))
     if request.method == "POST":
         resp = server.add_post(request.form["title"],
@@ -355,10 +493,6 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html", message=error), 404
-
-# @app.route("/user/<username>")
-# def user_profile(username):
-#     return render_template("<p>You are on %s's profile</p>" % username)
 
 @app.context_processor
 def template_context():
