@@ -3,6 +3,8 @@ from flask import Flask, redirect, render_template, \
 from src import utils, server
 import os
 
+# !!! SET DEV TO TRUE IF ON LOCALHOST !!!
+DEV = False
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "thoy"
@@ -141,4 +143,4 @@ def template_context():
     }
 
 if __name__ == "__main__":
-    app.run(debug=True, port=os.getenv("PORT", default=5000))
+    app.run(debug=DEV, port=os.getenv("PORT", default=5000))

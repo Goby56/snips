@@ -1,5 +1,5 @@
-import mysql.connector, bcrypt
-import json
+import mysql.connector
+import json, os
 
 class TableMismatch(Exception):
     """
@@ -16,9 +16,9 @@ class Database:
             self.models = json.load(f)
 
         self.db_connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=""
+            host=os.getenv("MYSQLHOST", default="localhost"),
+            user=os.getenv("MYSQLUSER", default="root"),
+            password=os.getenv("MYSQLPASSWORD", default="")
         )
         self.cursor = self.db_connection.cursor(prepared=True)
 
@@ -28,7 +28,7 @@ class Database:
         self.cursor.execute("SHOW DATABASES")
         if self.name not in map(lambda x: x[0], self.cursor.fetchall()):
             self.cursor.execute(f"CREATE DATABASE {self.name}")
-        self.db_connection.connect(database=self.name)
+        self.db_connection.connect(database=os.getenv("MYSQLDATABASE", default=self.name))
         
         self.cursor.execute("SHOW TABLES")
         existing_tables = list(map(lambda x: x[0], self.cursor.fetchall()))
