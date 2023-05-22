@@ -17,7 +17,7 @@ class Database:
 
         self.db_connection = mysql.connector.connect(
             host=os.getenv("MYSQLHOST", default="localhost"),
-            port=os.getenv("MYSQLPRT", default=3306),
+            port=os.getenv("MYSQLPORT", default=3306),
             user=os.getenv("MYSQLUSER", default="root"),
             password=os.getenv("MYSQLPASSWORD", default="")
         )
