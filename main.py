@@ -143,4 +143,5 @@ def template_context():
     }
 
 if __name__ == "__main__":
-    app.run(debug=DEV, port=os.getenv("PORT", default=5000))
+    host = "localhost" if DEV else "0.0.0.0"
+    app.run(debug=DEV, host=host, port=os.getenv("PORT", default=5000))
