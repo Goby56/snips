@@ -3,11 +3,11 @@ from flask import Flask, redirect, render_template, \
 from src import utils, server
 import os
 
-# !!! SET DEV TO TRUE IF ON LOCALHOST !!!
+# !!! SET DEV TO TRUE IF RUNNING LOCALLY !!!
 DEV = False
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "thoy"
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", default="thoy")
 
 server = server.Server(app.secret_key)
 
