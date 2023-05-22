@@ -223,7 +223,7 @@ class Server:
         `:param post_id:` The id of the post that the comment should be placed on
 
         `:param parent_id:` Location of where this comment should be placed. 
-        A value of 0 refers to a top level comment on the post, every other 
+        A value of 0 (None) refers to a top level comment on the post, every other 
         positive integer refers to a specific comment on that post.
 
         ### Use
@@ -232,14 +232,16 @@ class Server:
         ```
         add_comment('Nice code!', user_id, 4, 0)
         ```
-        This adds a top level comment on post with id 4
+        This adds a top level comment on post with id 4. 0 should actually be Null.
         """
         if not content:
             return COMMENT_RESP["COMMENT_NOT_PROVIED"]
         
         self.db_exec(self.cmds["create"]["comment"], 
                      content, publisher_id, 
-                     post_id, parent_id, commit=True)
+                     post_id, None, commit=True)
+        # Set parent_id to None as it has a foreign key restraint where it
+        # has to reference a comment id. 
         
         return COMMENT_RESP["COMMENT_CREATED"]
     
