@@ -15,8 +15,7 @@ server = server.Server(app.secret_key)
 @app.route("/")
 def home():
     session = utils.get_session(request, app.secret_key)
-    # result = server.db.read.recent_posts(10)
-    result = server.db_exec(server.cmds["read"]["recent_posts"], 10)
+    result = server.db.read.recent_posts(10)
     posts = utils.sql_result_to_dict(result, server.db.models["post"]["columns"])
     return render_template("home.html", **(session | {"posts": posts}))
 
@@ -46,7 +45,7 @@ def post(post_id, post_name=None):
     session = utils.get_session(request, app.secret_key)
 
     # Handle 404
-    result = server.db_exec(server.cmds["read"]["post"], post_id)
+    result = server.db.read.post(post_id)
     if not result:
         if post_name:
             title = post_name.replace("-", " ")
@@ -63,7 +62,7 @@ def post(post_id, post_name=None):
                                 post_id=post["id"], 
                                 post_name=url_title))
 
-    result = server.db_exec(server.cmds["read"]["post_comments"], post_id, 10)
+    result = server.db.read.post_comments(post_id, 10)
     comments = utils.sql_result_to_dict(result, server.db.models["comment"]["columns"])
 
     return render_template("post.html", post=post, comments=comments, **session)

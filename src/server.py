@@ -131,7 +131,7 @@ class Server:
         if not username or not password:
             return AUTH_RESP["INSUFFICENT_DETAILS"]
         
-        result = self.db_exec(self.cmds["read"]["user_auth"], username.lower())
+        result = self.db.read.user_auth(username.lower())
         if not result:
             return AUTH_RESP["INCORRECT_DETAILS"]
         
@@ -139,8 +139,7 @@ class Server:
         if not utils.verify_password(password, hashed_password):
             return AUTH_RESP["INCORRECT_DETAILS"]
         
-        self.db_exec(self.cmds["update"]["user_last_login"], 
-                     username.lower(), commit=True)
+        self.db.update.user_last_login(username.lower(), commit=True)
         token = utils.generate_token(self.secret_key, username=displayname, 
                                      user_id=self.get_user(username=username))
         return AUTH_RESP["LOGIN_SUCCESSFUL"] | {"token": token}
@@ -167,14 +166,12 @@ class Server:
         if password != passverify:
             return AUTH_RESP["PASSWORDS_DOES_NOT_MATCH"]
 
-        user = self.db_exec(self.cmds["read"]["user_auth"], username.lower())
+        user = self.db.read.user_auth(username.lower())
         if user:
             return AUTH_RESP["USERNAME_TAKEN"]
         
         hashed_pass = utils.hash_password(password) # salt encoded
-        self.db_exec(self.cmds["create"]["user"], 
-                              username.lower(), username, hashed_pass, 
-                              commit=True)
+        self.db.create.user(username.lower(), username, hashed_pass, commit=True)
         token = utils.generate_token(self.secret_key, username=username, 
                                      user_id=self.get_user(username=username))
         return AUTH_RESP["ACCOUNT_CREATED"] | {"token": token}
@@ -203,9 +200,8 @@ class Server:
             title = "Naming variables is not my thing"
 
         url_path = utils.str2url(title)
-        self.db_exec(self.cmds["create"]["post"], 
-                     title, content, description, language, 
-                     publisher_id, commit=True)
+        self.db.create.post(title, content, description, 
+                            language, publisher_id, commit=True)
         post_id = self.db_exec("SELECT LAST_INSERT_ID()")[0][0]
         return POST_RESP["POST_CREATED"] | {"post_id": post_id, "post_name": url_path}
     
@@ -238,9 +234,7 @@ class Server:
         if not content:
             return COMMENT_RESP["COMMENT_NOT_PROVIED"]
         
-        self.db_exec(self.cmds["create"]["comment"], 
-                     content, publisher_id, 
-                     post_id, None, commit=True)
+        self.db.create.comment(content, publisher_id, post_id, None, commit=True)
         # Set parent_id to None as it has a foreign key restraint where it
         # has to reference a comment id. 
         
@@ -275,14 +269,12 @@ class Server:
         ```
         """
         if comment_id == 0:
-            old_value = self.db_exec(self.cmds["read"]["vote_on_post"],
-                                    voter_id, post_id)
+            old_value = self.db.read.vote_on_post(voter_id, post_id)
             increment = new_value
 
             if old_value:
                 old_value = old_value[0][0]
-                self.db_exec(self.cmds["delete"]["post_vote"], 
-                            voter_id, post_id, commit=True)
+                self.db.delete.post_vote(voter_id, post_id, commit=True)
                 if old_value != new_value:
                     increment += new_value
                 elif old_value == new_value:
@@ -290,21 +282,19 @@ class Server:
 
             # Create new vote record if first vote or switch
             if old_value != new_value:
-                self.db_exec(self.cmds["create"]["post_vote"], new_value,
-                            voter_id, post_id, commit=True)
+                self.db.create.post_vote(new_value, voter_id, 
+                                         post_id, commit=True)
 
             # Update vote value on post
-            self.db_exec(self.cmds["update"]["post_votes_value"], 
-                         increment, post_id, commit=True)
+            self.db.update.post_votes_value(increment, post_id, commit=True)
         else:
-            old_value = self.db_exec(self.cmds["read"]["vote_on_comment"],
-                                    voter_id, post_id, comment_id)
+            old_value = self.db.read.vote_on_comment(voter_id, post_id, comment_id)
             increment = new_value
 
             if old_value:
                 old_value = old_value[0][0]
-                self.db_exec(self.cmds["delete"]["comment_vote"], 
-                            voter_id, post_id, comment_id, commit=True)
+                self.db.delete.comment_vote(voter_id, post_id, 
+                                            comment_id, commit=True)
                 if old_value != new_value:
                     increment += new_value
                 elif old_value == new_value:
@@ -312,12 +302,12 @@ class Server:
 
             # Create new vote record if first vote or switch
             if old_value != new_value:
-                self.db_exec(self.cmds["create"]["comment_vote"], new_value,
-                            voter_id, post_id, comment_id,commit=True)
+                self.db.create.comment_vote(new_value, voter_id, post_id, 
+                                            comment_id, commit=True)
 
             # Update vote value on comment
-            self.db_exec(self.cmds["update"]["comment_votes_value"], 
-                         increment, post_id, comment_id, commit=True)
+            self.db.update.comment_votes_value(increment, post_id, 
+                                               comment_id, commit=True)
     
     def get_user(self, user_id: int = None, username: str = None):
         """
@@ -337,10 +327,10 @@ class Server:
         by the :func:`context_processor`.
         """
         if user_id:
-            user = self.db_exec(self.cmds["read"]["user_name"], user_id)
+            user = self.db.read.user_name(user_id)
             return user[0][0] if user else "User deleted"
         elif username:
-            user = self.db_exec(self.cmds["read"]["user_id"], username)
+            user = self.db.read.user_id(username)
             return user[0][0] if user else None
         
     def has_voted(self, user_id: int, test_value: int, post_id: int, comment_id: int = 0):
@@ -359,11 +349,9 @@ class Server:
         if not user_id:
             return ""
         if comment_id == 0:
-            value = self.db_exec(self.cmds["read"]["vote_on_post"], 
-                                 user_id, post_id)
+            value = self.db.read.vote_on_post(user_id, post_id)
         else:
-            value = self.db_exec(self.cmds["read"]["vote_on_comment"], 
-                                 user_id, post_id, comment_id)
+            value = self.db.read.vote_on_comment(user_id, post_id, comment_id)
         if not value:
             return ""
         return "voted" if test_value == value[0][0] else ""
