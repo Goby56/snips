@@ -1,5 +1,6 @@
 import mysql.connector
 import json, os
+from src import crud
 
 class TableMismatch(Exception):
     """
@@ -15,21 +16,28 @@ class Database:
         with open("./db/models.json") as f:
             self.models = json.load(f)
 
-        self.db_connection = mysql.connector.connect(
+        self.connection = mysql.connector.connect(
             host=os.getenv("MYSQLHOST", default="localhost"),
             port=os.getenv("MYSQLPORT", default=3306),
             user=os.getenv("MYSQLUSER", default="root"),
             password=os.getenv("MYSQLPASSWORD", default="")
         )
-        self.cursor = self.db_connection.cursor(prepared=True)
+        # Implement dictionary cursor support (dictionary=True)
+        self.cursor = self.connection.cursor(prepared=True)
 
         self.validate()
+
+        # CRUD operations
+        self.create = crud.Create(self.connection, self.cursor)
+        self.read = crud.Read(self.connection, self.cursor)
+        self.update = crud.Update(self.connection, self.cursor)
+        self.delete = crud.Delete(self.connection, self.cursor)
     
     def validate(self):
         self.cursor.execute("SHOW DATABASES")
         if self.name not in map(lambda x: x[0], self.cursor.fetchall()):
             self.cursor.execute(f"CREATE DATABASE {self.name}")
-        self.db_connection.connect(database=os.getenv("MYSQLDATABASE", default=self.name))
+        self.connection.connect(database=os.getenv("MYSQLDATABASE", default=self.name))
         
         self.cursor.execute("SHOW TABLES")
         existing_tables = list(map(lambda x: x[0], self.cursor.fetchall()))

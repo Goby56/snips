@@ -1,5 +1,12 @@
 {
-    "fetch": {
+    "create": {
+        "user": "INSERT INTO user (username, displayname, password) VALUES (?, ?, ?)",
+        "post": "INSERT INTO post (title, content, description, programming_language, publisher_id) VALUES (?, ?, ?, ?, ?)",
+        "comment": "INSERT INTO comment (content, publisher_id, post_id, parent_id) VALUES (?, ?, ?, ?)",
+        "post_vote": "INSERT INTO post_votes (value, voter_id, post_id) VALUES (?, ?, ?)",
+        "comment_vote": "INSERT INTO comment_votes (value, voter_id, post_id, comment_id) VALUES (?, ?, ?, ?)"
+    },
+    "read": {
         "user_auth": "SELECT username, displayname, password FROM user WHERE username=?",
         "user_id": "SELECT id FROM user WHERE username=?",
         "user_name": "SELECT displayname FROM user WHERE id=?",
@@ -9,13 +16,6 @@
         "post_comments": "SELECT * FROM comment WHERE post_id=? ORDER BY pub_date DESC LIMIT ?",
         "vote_on_post": "SELECT value FROM post_votes WHERE voter_id=? AND post_id=?",
         "vote_on_comment": "SELECT value FROM comment_votes WHERE voter_id=? AND post_id=? AND comment_id=?"
-    },
-    "create": {
-        "user": "INSERT INTO user (username, displayname, password) VALUES (?, ?, ?)",
-        "post": "INSERT INTO post (title, content, description, programming_language, publisher_id) VALUES (?, ?, ?, ?, ?)",
-        "comment": "INSERT INTO comment (content, publisher_id, post_id, parent_id) VALUES (?, ?, ?, ?)",
-        "post_vote": "INSERT INTO post_votes (value, voter_id, post_id) VALUES (?, ?, ?)",
-        "comment_vote": "INSERT INTO comment_votes (value, voter_id, post_id, comment_id) VALUES (?, ?, ?, ?)"
     },
     "update": {
         "user_last_login": "UPDATE user SET last_login = CURRENT_TIMESTAMP WHERE username = ?",

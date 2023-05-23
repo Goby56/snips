@@ -74,6 +74,7 @@ class Server:
     def __init__(self, secret_key) -> None:
         self.db = database.Database("snips")
         self.secret_key = secret_key
+        # TODO IMPLEMENT CRUD PATTERN
         with open("./db/commands.json", "r") as f:
             self.cmds = json.load(f)
 
@@ -95,7 +96,7 @@ class Server:
 
         Fetch user authentication details:
         ```
-        result = self.db_exec(self.cmds["fetch"]["user_auth"], username.lower())
+        result = self.db_exec(self.cmds["read"]["user_auth"], username.lower())
         ```
 
         Update last login of user:
@@ -110,7 +111,7 @@ class Server:
         else:
             self.db.cursor.execute(sql_cmd, args)
         if commit:
-            self.db.db_connection.commit()
+            self.db.connection.commit()
         return self.db.cursor.fetchall()
 
     def authenticate(self, username: str, password: str):
@@ -130,7 +131,7 @@ class Server:
         if not username or not password:
             return AUTH_RESP["INSUFFICENT_DETAILS"]
         
-        result = self.db_exec(self.cmds["fetch"]["user_auth"], username.lower())
+        result = self.db_exec(self.cmds["read"]["user_auth"], username.lower())
         if not result:
             return AUTH_RESP["INCORRECT_DETAILS"]
         
@@ -166,7 +167,7 @@ class Server:
         if password != passverify:
             return AUTH_RESP["PASSWORDS_DOES_NOT_MATCH"]
 
-        user = self.db_exec(self.cmds["fetch"]["user_auth"], username.lower())
+        user = self.db_exec(self.cmds["read"]["user_auth"], username.lower())
         if user:
             return AUTH_RESP["USERNAME_TAKEN"]
         
@@ -274,7 +275,7 @@ class Server:
         ```
         """
         if comment_id == 0:
-            old_value = self.db_exec(self.cmds["fetch"]["vote_on_post"],
+            old_value = self.db_exec(self.cmds["read"]["vote_on_post"],
                                     voter_id, post_id)
             increment = new_value
 
@@ -296,7 +297,7 @@ class Server:
             self.db_exec(self.cmds["update"]["post_votes_value"], 
                          increment, post_id, commit=True)
         else:
-            old_value = self.db_exec(self.cmds["fetch"]["vote_on_comment"],
+            old_value = self.db_exec(self.cmds["read"]["vote_on_comment"],
                                     voter_id, post_id, comment_id)
             increment = new_value
 
@@ -336,10 +337,10 @@ class Server:
         by the :func:`context_processor`.
         """
         if user_id:
-            user = self.db_exec(self.cmds["fetch"]["user_name"], user_id)
+            user = self.db_exec(self.cmds["read"]["user_name"], user_id)
             return user[0][0] if user else "User deleted"
         elif username:
-            user = self.db_exec(self.cmds["fetch"]["user_id"], username)
+            user = self.db_exec(self.cmds["read"]["user_id"], username)
             return user[0][0] if user else None
         
     def has_voted(self, user_id: int, test_value: int, post_id: int, comment_id: int = 0):
@@ -358,10 +359,10 @@ class Server:
         if not user_id:
             return ""
         if comment_id == 0:
-            value = self.db_exec(self.cmds["fetch"]["vote_on_post"], 
+            value = self.db_exec(self.cmds["read"]["vote_on_post"], 
                                  user_id, post_id)
         else:
-            value = self.db_exec(self.cmds["fetch"]["vote_on_comment"], 
+            value = self.db_exec(self.cmds["read"]["vote_on_comment"], 
                                  user_id, post_id, comment_id)
         if not value:
             return ""
