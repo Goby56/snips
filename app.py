@@ -4,7 +4,7 @@ from src import utils, server
 
 import os
 
-# Move app module to src and specify static and template folders
+# TODO Move app module to src and specify static and template folders
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", default="thoy")
 
@@ -84,7 +84,6 @@ def comment(post_id, comment_id):
 @app.route("/upvote/<int:post_id>/<int:comment_id>")
 @app.route("/downvote/<int:post_id>/<int:comment_id>")
 def vote(post_id, comment_id):
-    print(comment_id)
     session = utils.get_session(request, app.secret_key)
     if not session["authorized"]:
         return redirect(url_for("login"))
