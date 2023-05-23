@@ -74,9 +74,6 @@ class Server:
     def __init__(self, secret_key) -> None:
         self.db = database.Database("snips")
         self.secret_key = secret_key
-        # TODO IMPLEMENT CRUD PATTERN
-        with open("./db/commands.json", "r") as f:
-            self.cmds = json.load(f)
 
     def db_exec(self, sql_cmd: str, *args, commit = False):
         """
