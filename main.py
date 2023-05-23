@@ -1,7 +1,5 @@
-from flask import Flask, redirect, render_template, \
-    request, url_for, make_response
-from src import utils, server, app
 import os
+import app
 
 flask_app = app.app
 
