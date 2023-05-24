@@ -1,8 +1,11 @@
 ### Order of precedence: top to bottom
 
+
+
 ## NGINX Web Server
 [NGINX-gunicorn](https://docs.gunicorn.org/en/stable/deploy.html)
 [NGINX-flask](https://flask.palletsprojects.com/en/2.3.x/deploying/nginx/)
+[NGINX & gunicorn tutorial](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04)
 Run from docker image?
 Communicate with gunicorn -> flask
 
