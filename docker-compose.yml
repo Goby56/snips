@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  gunicorn:
+    volumes:
+      - ./src/static:/static
+    env_file:
+      - .env
+    build: 
+      context: .
+    ports:
+      - "5000:5000"
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./src/static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - gunicorn 
+
+volumes:
+  static:

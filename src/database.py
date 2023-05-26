@@ -1,6 +1,6 @@
 import mysql.connector
 import json, os
-from src import crud
+import crud
 
 class TableMismatch(Exception):
     """
@@ -15,6 +15,7 @@ class Database:
         self.name = name
         with open("./db/models.json") as f:
             self.models = json.load(f)
+        
 
         self.connection = mysql.connector.connect(
             host=os.getenv("MYSQLHOST", default="localhost"),

@@ -1,6 +1,4 @@
-import json
-
-from src import database, utils
+import database, utils
 
 # Authorization respone
 AUTH_RESP = {

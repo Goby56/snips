@@ -1,13 +1,12 @@
 from flask import Flask, redirect, render_template, \
     request, url_for, make_response
-from src import utils, server
+import utils, server
 
 import os
 
 # TODO Move app module to src and specify static and template folders
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", default="thoy")
-
 
 server = server.Server(app.secret_key)
 
