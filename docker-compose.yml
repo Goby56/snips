@@ -9,15 +9,26 @@ services:
     build: 
       context: .
     ports:
-      - "5000:5000"
+      - "5002:5001"
   nginx:
     build: ./nginx
     volumes:
       - ./src/static:/static
+      - phpmyadmin:/phpmyadmin/:ro # named volume 'phpmyadmin' from phpmyadmin service
     ports:
       - "80:80"
     depends_on:
-      - gunicorn 
+      - gunicorn
+      - phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin:fpm
+    restart: always
+    volumes:
+      - phpmyadmin:/var/www/html/
+    environment:
+      - PMA_HOST=${MYSQLHOST}
+      - PMA_PORT=${MYSQLPORT}
 
 volumes:
   static:
+  phpmyadmin:

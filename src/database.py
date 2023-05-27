@@ -15,7 +15,11 @@ class Database:
         self.name = name
         with open("./db/models.json") as f:
             self.models = json.load(f)
-        
+        print(os.getenv("MYSQLHOST"))
+        print(os.getenv("MYSQLPORT"))
+        print(os.getenv("MYSQLUSER"))
+        print(os.getenv("MYSQLPASSWORD"))
+        print(os.getenv("MYSQLDATABASE"))
 
         self.connection = mysql.connector.connect(
             host=os.getenv("MYSQLHOST", default="localhost"),
